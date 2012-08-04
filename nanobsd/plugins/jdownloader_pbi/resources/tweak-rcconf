@@ -1,0 +1,8 @@
+#!/bin/sh
+
+jdownloader_path=/usr/pbi/jdownloader-$(uname -m)
+tmpfile=$(mktemp /tmp/.XXXXXX)
+
+grep -v 'jdownloader_' /etc/rc.conf > ${tmpfile}
+cat ${jdownloader_path}/etc/rc.conf >> ${tmpfile}
+mv ${tmpfile} /etc/rc.conf

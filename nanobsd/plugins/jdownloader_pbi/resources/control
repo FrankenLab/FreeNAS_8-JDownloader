@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec /usr/pbi/jdownloader-$(uname -m)/bin/python /usr/pbi/jdownloader-$(uname -m)/control.py $*
