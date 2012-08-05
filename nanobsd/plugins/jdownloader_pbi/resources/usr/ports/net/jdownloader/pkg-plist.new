@@ -1,0 +1,3 @@
+@dirrm %%JAVAJARDIR%%/JDownloader/plugins
+@dirrm %%JAVAJARDIR%%/JDownloader
+@exec mkdir -p %D/%%JAVAJARDIR%%/JDownloader/plugins
