@@ -1,70 +1,10 @@
 #!/bin/sh
-#!/usr/local/bin/bash
-#export DISPLAY=192.168.1.50:0.0
-#export DISPLAY=127.0.0.1:10.0
-#export DISPLAY=192.168.1.30:0.0
-#export DISPLAY=127.0.0.1:0.0
-#export DISPLAY=:0.0
-java -Xmx512m -jar /usr/local/jdownloader/JDownloader/JDownloader.jar &
-
-#!/usr/local/bin/bash
 #
-su - admin -c "/usr/local/jdownloader/jdownloader.sh &> /dev/null"
+# $FreeBSD$
 
-# Execute the JVM in the foreground
-exec java -Xmx384M $JAVA_OPTS -classpath "$SERVIIO_CLASS_PATH" org.jdownloader.MediaServer "$@"
-
-#!/bin/sh
-#
-#
-# PROVIDE: jdownloader
-# REQUIRE: DAEMON 
-#
-# Add the following lines to /etc/rc.conf to enable this service:
-#
-# jdownloader_enable:            Set to NO by default. Set it to YES to enable it.
-#                            a path.
-# jdownloader_user:              The user account jdownloader daemon runs as
-#
-
-. /etc/rc.subr
-
-name="jdownloader"
-rcvar=${name}_enable
-
-pidfile=/var/run/jdownloader.pid
-command=/usr/pbi/jdownloader-$(uname -m)/sbin/jdownloaderd
-
-load_rc_config $name
-
-jdownloader_user=${jdownloader_user-"dlna"}
-
-_dirs="/var/db/jdownloader /var/log/jdownloader"
-
-start_precmd="mkdir -p $_dirs; chown $jdownloader_user $_dirs"
-
-command_args="$jdownloader_args &"
-
-jdownloader_stop()
-{
-        res=1
-        echo -n 'Stopping jdownloader.'
-        if [ -f "${pidfile}" ]
-        then
-                kill -KILL $(cat "${pidfile}")
-                rm -f ${pidfile}
-                res=$?
-        else
-                killall -KILL jdownloaderd
-                res=$?
-        fi
-
-        echo
-        return ${res}
-}
-
-stop_cmd='jdownloader_stop'
-run_rc_command "$1"
+# Change IP address in line below to the IP address of your X11 Server/Display
+#export DISPLAY=192.168.1.1:0.0
+exec java -Xmx512m -jar /usr/local/jdownloader/JDownloader/JDownloader.jar
 
 # Hack to write proper pidfile for jdownloader
 sleep 2

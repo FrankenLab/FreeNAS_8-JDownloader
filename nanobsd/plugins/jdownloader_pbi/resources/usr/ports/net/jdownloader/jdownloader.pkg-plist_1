@@ -9,6 +9,7 @@
 @dirrm tools/linux/unrar
 @dirrm tools/mac
 @dirrm tools/mac/unrar2
+sbin/jdownloaderd
 java
 jd
 jd/captcha
