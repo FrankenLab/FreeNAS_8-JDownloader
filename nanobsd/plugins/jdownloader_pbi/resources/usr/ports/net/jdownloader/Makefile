@@ -19,8 +19,9 @@ RUN_DEPENDS=	unzip:${PORTSDIR}/archivers/unzip unrar:${PORTSDIR}/archivers/unrar
 
 NO_BUILD=		yes
 USE_JAVA=		yes
+JAVA_VENDOR=		openjdk
 USE_ZIP=		yes
-JAVA_VERSION=		1.6+
+JAVA_VERSION=		1.7+
 JAVA_RUN=		yes
 
 #USE_DISPLAY=		yes
@@ -53,18 +54,31 @@ post-extract:
 	@${RM} -f ${WRKDIR}/JDownloader/JDownloaderBETA.exe
 	@${RM} -f ${WRKDIR}/JDownloader/JDownloaderD3D.exe
 	@${RM} -f ${WRKDIR}/JDownloader/JDUpdate.exe
+	@${RM} -f ${WRKDIR}/JDownloader/windows_createlog.bat
+	@${RM} -f ${WRKDIR}/JDownloader/windows_restore.bat
 	@${RM} -f ${WRKDIR}/JDownloader/plugins/jdshutdown/windows/shutdown.exe
 	@${RM} -rf ${WRKDIR}/JDownloader/tools/Windows
 	@${RM} -rf ${WRKDIR}/JDownloader/tools/linux
 	@${RM} -rf ${WRKDIR}/JDownloader/tools/mac
 
 do-install:
+#/usr/local/share/java/JDownloader/workspace/FreeNAS_8-JDownloader/nanobsd/plugins/jdownloader_pbi/resources/usr/ports/net/jdownloader/work/JDownloader/JDownloader.jar
 #	${MKDIR} ${JAVAJARDIR}/${PORTNAME}/plugins
 #	${MKDIR} ${DATADIR}
-	${COPYTREE_SHARE} ${WRKSRC}/ ${DATADIR}/
 #	${INSTALL_DATA} ${WRKSRC}/ ${DATADIR}/
-	${MKDIR} ${PREFIX}/etc/${PORTNAME}
 #	${INSTALL_DATA} ${WRKSRC}/lib/*.jar ${JAVAJARDIR}/${PORTNAME}/
+#	${MKDIR} ${PREFIX}/etc/${PORTNAME}
+	@${ECHO_MSG} "DATADIR is:"
+	@${ECHO_MSG} ${DATADIR}
+	@${ECHO_MSG} "PREFIX is:"
+	@${ECHO_MSG} ${PREFIX}
+	@${ECHO_MSG} "WRKSRC is:"
+	@${ECHO_MSG} ${WRKSRC}
+	@${ECHO_MSG} "WRKDIR is:"
+	@${ECHO_MSG} ${WRKDIR}
+	@${ECHO_MSG} " "
+	(cd ${WRKSRC}/ && ${COPYTREE_SHARE} \* ${DATADIR})
+#	${COPYTREE_SHARE} ${WRKSRC}/* ${DATADIR}/
 	${INSTALL_SCRIPT} ${WRKDIR}/jdownloaderd ${PREFIX}/sbin
 
 #do-install:
@@ -105,27 +119,6 @@ do-install:
 #DISTFILE_INSTRUCTIONS   +=      You will be required to register and log in, \n
 #DISTFILE_INSTRUCTIONS   +=      but you can create an account on that page.  \n
 #.endif
-
-#post-patch:
-#@${RM} ${WRKDIR}/
-# Don't need all of this since we're on FreeBSD
-#${RM} -f ${WRKDIR}/JDownloader/JDownloader.exe
-#${RM} -f ${WRKDIR}/JDownloader/JDownloaderBETA.exe
-#${RM} -f ${WRKDIR}/JDownloader/JDownloaderD3D.exe
-#${RM} -f ${WRKDIR}/JDownloader/JDUpdate.exe
-#${RM} -f ${WRKDIR}/JDownloader/plugins/jdshutdown/windows/shutdown.exe
-#${RM} -rf ${WRKDIR}/JDownloader/tools/Windows
-#
-#${RM} -rf ${WRKDIR}/JDownloader/tools/Windows/kikin/kikin_installer.exe
-#${RM} ${WRKDIR}/JDownloader/tools/Windows/kikin/ins_de.png
-#${RM} ${WRKDIR}/JDownloader/tools/Windows/kikin/ins_en.png
-#${RM} ${WRKDIR}/JDownloader/tools/Windows/kikin/installer.version
-#${RM} ${WRKDIR}/JDownloader/tools/Windows/kikin/kikin.png
-#${RM} ${WRKDIR}/JDownloader/tools/Windows/uninstall.reg
-#${RM} ${WRKDIR}/JDownloader/tools/Windows/unrarw32/unrar.exe
-#${RM} ${WRKDIR}/JDownloader/tools/Windows/unrarw32/cygwin1.dll
-#${RM} ${WRKDIR}/JDownloader/tools/linux/unrar/unrar
-#${RM} ${WRKDIR}/JDownloader/tools/mac/unrar2/unrar
 
 #.for FILE in ${NONUNIX}
 # tools/Windows tools/linux tools/mac

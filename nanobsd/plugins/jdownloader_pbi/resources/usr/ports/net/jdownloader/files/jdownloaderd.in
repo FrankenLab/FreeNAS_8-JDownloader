@@ -4,7 +4,7 @@
 
 # Change IP address in line below to the IP address of your X11 Server/Display
 #export DISPLAY=192.168.1.1:0.0
-exec java -Xmx512m -jar /usr/local/jdownloader/JDownloader/JDownloader.jar
+exec java -Xmx512m -jar /usr/local/share/java/JDownloader/JDownloader.jar
 
 # Hack to write proper pidfile for jdownloader
 sleep 2

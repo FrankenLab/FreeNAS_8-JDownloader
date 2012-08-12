@@ -1,3 +1,7 @@
+You need to set/EXPORT your X11 DISPLAY variable before running JDownloader.
+In the jdownloaderd script located /usr/local/sbin, there is an example line
+commented out.
+
 The configuration files are installed in %%PREFIX%%/etc/serviio --
 but only the logging configuration and the player device-profiles
 may be changed there -- the library is set via the GUI program
@@ -10,13 +14,3 @@ start at boot. It will run as user ``%%USER%%''.
 
 When the server is running, run the %%PREFIX%%/bin/serviio-console (a
 GUI program) on the same host -- as yourself -- to configure it.
-
-From http://www.serviio.org/component/content/article/21#q2 :
-If you'd like to manage the service from a remote host, add
-
-	serviio_args=-Dserviio.remoteHost=yo.ur.local.ip
-
-to rc.conf. Note, that there is NO AUTHENTICATION between console and
-the server processes.
-
-For support, visit the lively forum at http://forum.serviio.org/
