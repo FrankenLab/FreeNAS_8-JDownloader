@@ -18,7 +18,7 @@ name="jdownloader"
 rcvar=${name}_enable
 
 pidfile=/var/run/jdownloader.pid
-command=%%PREFIX%%/sbin/jdownloaderd
+command=%%PREFIX%%/sbin/jdownloader
 
 load_rc_config $name
 
@@ -36,7 +36,7 @@ jdownloader_stop()
                 rm -f ${pidfile}
                 res=$?
         else
-                killall -KILL jdownloaderd
+                killall -KILL jdownloader
                 res=$?
         fi
 

@@ -3,8 +3,16 @@
 # $FreeBSD$
 
 # Change IP address in line below to the IP address of your X11 Server/Display
+# and remove the # at the beginning of the line
 #export DISPLAY=192.168.1.1:0.0
+#
+
 exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar
+
+# If you are using the Xvfb method to view JDownloader with VNC use
+# the command below and comment out the one above
+
+#exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar -rfu
 
 # Need to wait for Java to start before getting PID
 sleep 2

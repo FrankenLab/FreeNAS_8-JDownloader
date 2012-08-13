@@ -24,7 +24,7 @@ USE_ZIP=		yes
 JAVA_VERSION=		1.7+
 JAVA_RUN=		yes
 
-#USE_DISPLAY=		no
+USE_DISPLAY=		yes
 # If set, this ports requires a (virtual) X11 environment
 # setup. If the environment variable DISPLAY is NOT set,
 # then an extra build dependency on Xvfb is added. Further,
