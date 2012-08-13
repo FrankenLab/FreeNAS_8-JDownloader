@@ -1,6 +1,6 @@
 # New ports collection makefile for:	jdownloader
 # Date created:		2012-08-03
-# Whom:			ProtoSD <sdproto@gmail.com>
+# Whom:			R. Tristanaux <sdproto@gmail.com>
 #
 # $FreeBSD$
 #
@@ -24,17 +24,17 @@ USE_ZIP=		yes
 JAVA_VERSION=		1.7+
 JAVA_RUN=		yes
 
-#USE_DISPLAY=		yes
+#USE_DISPLAY=		no
 # If set, this ports requires a (virtual) X11 environment
-# setup. If the environment variable DISPLAY Is not set,
+# setup. If the environment variable DISPLAY is NOT set,
 # then an extra build dependency on Xvfb is added. Further,
 # if PACKAGE_BUILDING is not set, then CONFIGURE_ENV and
 # MAKE_ENV are extended with a DISPLAY variable.
 
 WRKSRC=			${WRKDIR}/${PORTNAME}
 DATADIR=        	${JAVASHAREDIR}/${PORTNAME}
-SUB_FILES+=		pkg-message jdownloaderd
-USE_RC_SUBR=		jdownloader
+SUB_FILES+=		pkg-message jdownloader
+USE_RC_SUBR=		jdownloaderd
 SUB_LIST+=		USER=${USERS}
 RESTRICTED=		License does not allow selling
 USERS=			www

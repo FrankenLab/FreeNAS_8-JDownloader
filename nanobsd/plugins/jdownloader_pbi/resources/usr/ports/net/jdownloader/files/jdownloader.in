@@ -1,52 +1,11 @@
 #!/bin/sh
 #
-# PROVIDE: jdownloader
-# REQUIRE: LOGIN 
-# KEYWORD: shutdown
 # $FreeBSD$
-#
-# Add the following lines to /etc/rc.conf to enable this service:
-#
-# jdownloader_enable:            Set to NO by default. Set it to YES to enable it.
-#                            a path.
-# jdownloader_user:              The user account jdownloader daemon runs as
-#
 
-. /etc/rc.subr
+# Change IP address in line below to the IP address of your X11 Server/Display
+#export DISPLAY=192.168.1.1:0.0
+exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar
 
-name="jdownloader"
-rcvar=${name}_enable
-
-pidfile=/var/run/jdownloader.pid
-command=%%PREFIX%%/sbin/jdownloaderd
-
-load_rc_config $name
-
-jdownloader_user=${jdownloader_user-"www"}
-
-command_args="$jdownloader_args"
-
-jdownloader_stop()
-{
-        res=1
-        echo -n 'Stopping jdownloader.'
-        if [ -f "${pidfile}" ]
-        then
-                kill -KILL $(cat "${pidfile}")
-                rm -f ${pidfile}
-                res=$?
-        else
-                killall -KILL jdownloaderd
-                res=$?
-        fi
-
-        echo
-        return ${res}
-}
-
-stop_cmd='jdownloader_stop'
-run_rc_command "$1"
-
-# Hack to write proper pidfile for jdownloader
+# Need to wait for Java to start before getting PID
 sleep 2
 pgrep -U www -f jdownloader > /var/run/jdownloader.pid
