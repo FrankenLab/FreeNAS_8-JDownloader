@@ -13,9 +13,9 @@ MASTER_SITES=	http://94.23.204.158/
 DISTNAME=	${PORTNAME}
 
 MAINTAINER=	sdproto@gmail.com
-COMMENT=	Captures links and manages downloading targets
+COMMENT=	Captures HTML links and manages downloading targets
 
-RUN_DEPENDS=	unzip:${PORTSDIR}/archivers/unzip unrar:${PORTSDIR}/archivers/unrar wget:${PORTSDIR}/ftp/wget
+RUN_DEPENDS=	unzip:${PORTSDIR}/archivers/unzip unrar:${PORTSDIR}/archivers/unrar wget:${PORTSDIR}/ftp/wget Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver
 
 NO_BUILD=		yes
 USE_JAVA=		yes
@@ -24,7 +24,7 @@ USE_ZIP=		yes
 JAVA_VERSION=		1.7+
 JAVA_RUN=		yes
 
-USE_DISPLAY=		yes
+#USE_DISPLAY=		yes
 # If set, this ports requires a (virtual) X11 environment
 # setup. If the environment variable DISPLAY is NOT set,
 # then an extra build dependency on Xvfb is added. Further,
@@ -56,10 +56,11 @@ do-install:
 	(cd ${WRKSRC}/ && ${COPYTREE_SHARE} \* ${DATADIR})
 	${INSTALL_SCRIPT} ${WRKDIR}/jdownloaderd ${PREFIX}/sbin
 
-#.if !exists(${DISTDIR}/${DIST_SUBDIR}/${DISTNAME}${EXTRACT_SUFX})
-#DISTFILE_INSTRUCTIONS   =       \n
-#DISTFILE_INSTRUCTIONS   +=      Sample text for manually retrieving distfile for port\n
-#.endif
+.if !exists(${DISTDIR}/${DIST_SUBDIR}/${DISTNAME}${EXTRACT_SUFX})
+DISTFILE_INSTRUCTIONS   =       \n
+DISTFILE_INSTRUCTIONS   +=      Download the distfile from http://94.23.204.158/JDownloader.zip\n
+DISTFILE_INSTRUCTIONS   +=      and copy it to /usr/ports/distfiles.\n
+.endif
 
 post-install:
 	# =========================================================

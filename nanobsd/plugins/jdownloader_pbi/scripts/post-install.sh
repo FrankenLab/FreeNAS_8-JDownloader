@@ -20,10 +20,7 @@ cp /usr/pbi/jdownloader-`uname -m`/jdownloader.RC /usr/pbi/jdownloader-`uname -m
 # Add JAIL_IP into /usr/pbi/sbin/jdownloaderd
 # Probably should add JAIL_IP line into jdownloaderd
 
-JAIL_IP=`ifconfig  | grep -E 'inet.[0-9]' | grep -v '127.0.0.1' | awk '{ print $2}'`
-
-#sed -i '' -e "21a\\
-#JAVA_OPTS=\"\${JAVA_OPTS} -Djdownloader.remoteHost=${JAIL_IP}\"" /usr/pbi/jdownloader-`uname -m`/sbin/jdownloaderd
+JAIL_IP=`ifconfig  | grep -E 'inet.[0-9]' | grep -v '127.0.0.1' | awk '{ print \$2}'`
 
 echo $JAIL_IP"	"`hostname` >> /etc/hosts
 
