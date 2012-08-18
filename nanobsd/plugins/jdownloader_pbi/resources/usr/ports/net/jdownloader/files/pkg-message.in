@@ -9,11 +9,11 @@ is that JDownloader will not be able to detect selected links from
 the client and also may possibly crash if a catcha prompt pops up. The 
 advantage is you can disconnect and let it run in the background.
 
-You need to install x11vnc: "pkg_add -r x11vnc" and also add the following
+You need to install x11vnc: "pkg_add -r x11vnc" and add the following
 lines to /usr/local/sbin/jdownloader:
 
 Xvfb :1 -screen 0 1024x768x16
-x11vnc -usepw -nevershared -forever -display :1
+exec x11vnc -usepw -nevershared -forever -display :1
 exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar -rfu
 
 Now start your vnc client and connect to the IP address of the system

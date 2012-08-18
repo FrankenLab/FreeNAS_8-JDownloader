@@ -15,7 +15,7 @@ DISTNAME=	${PORTNAME}
 MAINTAINER=	sdproto@gmail.com
 COMMENT=	Captures HTML links and manages downloading targets
 
-RUN_DEPENDS=	unzip:${PORTSDIR}/archivers/unzip unrar:${PORTSDIR}/archivers/unrar wget:${PORTSDIR}/ftp/wget Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver
+RUN_DEPENDS=	unzip:${PORTSDIR}/archivers/unzip unrar:${PORTSDIR}/archivers/unrar wget:${PORTSDIR}/ftp/wget
 
 NO_BUILD=		yes
 USE_JAVA=		yes
@@ -24,12 +24,7 @@ USE_ZIP=		yes
 JAVA_VERSION=		1.7+
 JAVA_RUN=		yes
 
-#USE_DISPLAY=		yes
-# If set, this ports requires a (virtual) X11 environment
-# setup. If the environment variable DISPLAY is NOT set,
-# then an extra build dependency on Xvfb is added. Further,
-# if PACKAGE_BUILDING is not set, then CONFIGURE_ENV and
-# MAKE_ENV are extended with a DISPLAY variable.
+OPTIONS_DEFINE=	XVFB
 
 WRKSRC=			${WRKDIR}/${PORTNAME}
 DATADIR=        	${JAVASHAREDIR}/${PORTNAME}
@@ -39,6 +34,13 @@ SUB_LIST+=		USER=${USERS}
 RESTRICTED=		License does not allow selling
 USERS=			www
 GROUPS=			www
+
+.include <bsd.port.options.mk>
+
+# Xvfb
+.if ${PORT_OPTIONS:MXVFB}
+LIB_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver
+.endif
 
 post-extract:
 	@${RM} -f ${WRKDIR}/JDownloader/JDownloader.exe
