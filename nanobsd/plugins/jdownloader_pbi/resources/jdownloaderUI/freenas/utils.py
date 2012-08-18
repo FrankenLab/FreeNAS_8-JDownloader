@@ -7,8 +7,8 @@ jdownloader_etc_path = os.path.join(jdownloader_pbi_path, "etc")
 jdownloader_mnt_path = os.path.join(jdownloader_pbi_path, "mnt")
 jdownloader_fcgi_pidfile = "/var/run/jdownloader.pid"
 jdownloader_fcgi_wwwdir = os.path.join(jdownloader_pbi_path, "www")
-jdownloader_control = "/usr/local/etc/rc.d/jdownloader"
-jdownloader_config = os.path.join(jdownloader_etc_path, "mt-daapd.conf")
+jdownloader_control = "/usr/local/etc/rc.d/jdownloaderd"
+jdownloader_config = os.path.join(jdownloader_etc_path, "jdownloader.conf")
 jdownloader_icon = os.path.join(jdownloader_pbi_path, "default.png")
 jdownloader_oauth_file = os.path.join(jdownloader_pbi_path, ".oauth")
 
