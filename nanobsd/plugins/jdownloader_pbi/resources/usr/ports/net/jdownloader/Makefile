@@ -39,7 +39,7 @@ GROUPS=			www
 
 # Xvfb
 .if ${PORT_OPTIONS:MXVFB}
-LIB_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver
+RUN_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver
 .endif
 
 post-extract:

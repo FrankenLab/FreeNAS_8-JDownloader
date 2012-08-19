@@ -24,9 +24,11 @@ running JDownloader.
 The first time you run x11vnc, it will ask you to choose a password
 you will use when connecting with VNC.
 
-If you run into difficulties building with this option, make sure you update
-libdrm (portupgrade -f libdrm), and possibly need to do (portmaster -r pcre-8.31)
-as well as cd /usr/local/ports/textproc/p5-XML-Parser and make reinstall
+If you run into difficulties building with this option, try the following:
+make sure you update libdrm (portupgrade -f libdrm)
+Update pcre (portmaster -r pcre-8.31)
+cd /usr/local/ports/textproc/p5-XML-Parser and make reinstall
+portupgrade and portmaster can be found in /usr/ports/ports-mgmt
 
 JDownloader also has several different web interface plugins you can enable
 from the GUI which allow you to control and add downloads.
