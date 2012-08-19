@@ -9,11 +9,6 @@
 
 exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar
 
-# If you are using the Xvfb method to view JDownloader with VNC use
-# the command below and comment out the one above
-
-#exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar -rfu
-
 # Need to wait for Java to start before getting PID
 sleep 2
 pgrep -U www -f jdownloader > /var/run/jdownloader.pid
