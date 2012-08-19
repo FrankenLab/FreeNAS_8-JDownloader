@@ -3,16 +3,18 @@ In the jdownloader script located in /usr/local/sbin, there is an example line
 commented out.
 
 If you prefer to run JDownloader "Headless", Xvfb has been included as
-a dependency so you can then use VNC to attach and control a virtual
+an option so you can then use VNC to attach and control a virtual
 X Display, Xvfb and view JDownloader. The disadvantage to this method
 is that JDownloader will not be able to detect selected links from
 the client and also may possibly crash if a catcha prompt pops up. The 
-advantage is you can disconnect and let it run in the background.
+advantage is you can disconnect and let it run in the background. Run
+"make config" and check Xvfb to enable this option.
 
 You need to install x11vnc: "pkg_add -r x11vnc" and add the following
 lines to /usr/local/sbin/jdownloader:
 
 Xvfb :1 -screen 0 1024x768x16
+export DISPLAY=:1
 exec x11vnc -usepw -nevershared -forever -display :1
 exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar -rfu
 
