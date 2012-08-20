@@ -16,7 +16,7 @@ lines to /usr/local/sbin/jdownloader:
 Xvfb :1 -screen 0 1024x768x16
 export DISPLAY=:1
 exec x11vnc -usepw -nevershared -forever -display :1
-exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar -rfu
+exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar
 
 Now start your vnc client and connect to the IP address of the system
 running JDownloader.
@@ -25,9 +25,9 @@ The first time you run x11vnc, it will ask you to choose a password
 you will use when connecting with VNC.
 
 If you run into difficulties building with this option, try the following:
-make sure you update libdrm (portupgrade -f libdrm)
-Update pcre (portmaster -r pcre-8.31)
-cd /usr/local/ports/textproc/p5-XML-Parser and make reinstall
+1) make sure you update libdrm (portupgrade -f libdrm)
+2) Update pcre (portmaster -r pcre-8.31)
+3) cd /usr/local/ports/textproc/p5-XML-Parser and make reinstall
 portupgrade and portmaster can be found in /usr/ports/ports-mgmt
 
 JDownloader also has several different web interface plugins you can enable
