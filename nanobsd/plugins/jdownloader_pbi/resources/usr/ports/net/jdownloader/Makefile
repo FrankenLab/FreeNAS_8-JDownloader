@@ -35,11 +35,12 @@ RESTRICTED=		License does not allow selling
 USERS=			www
 GROUPS=			www
 
-.include <bsd.port.options.mk>
+#.include <bsd.port.options.mk>
+.include <bsd.port.pre.mk>
 
 # Xvfb
 .if ${PORT_OPTIONS:MXVFB}
-RUN_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver
+RUN_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver x11vnc:${PORTSDIR}/net/x11vnc
 .endif
 
 post-extract:
