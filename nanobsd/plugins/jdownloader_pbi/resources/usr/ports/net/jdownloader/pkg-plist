@@ -1,4 +1,4 @@
-sbin/jdownloaderd
+sbin/jdownloader
 %%JAVASHAREDIR%%/JDownloader/JDownloader.jar
 %%JAVASHAREDIR%%/JDownloader/java/donotdelete.me
 %%JAVASHAREDIR%%/JDownloader/jd/captcha/captcha.extract

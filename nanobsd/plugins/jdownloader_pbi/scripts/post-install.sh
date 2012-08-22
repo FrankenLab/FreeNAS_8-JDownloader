@@ -3,6 +3,9 @@
 echo libz.so.4 libz.so.5 > /etc/libmap.conf
 echo libz.so.4 libz.so.5 > /usr/pbi/jdownloader-`uname -m`/etc/libmap.conf
 
+cp -a /usr/local/sbin/jdownloader /usr/pbi/jdownloader-`uname -m`/sbin/jdownloader
+chown www:www /usr/pbi/jdownloader-`uname -m`/sbin/jdownloader
+
 
 mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www

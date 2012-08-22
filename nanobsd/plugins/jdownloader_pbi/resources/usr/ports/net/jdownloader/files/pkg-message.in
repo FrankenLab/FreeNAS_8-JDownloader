@@ -8,10 +8,10 @@ X Display, Xvfb and view JDownloader. The disadvantage to this method
 is that JDownloader will not be able to detect selected links from
 the client and also may possibly crash if a catcha prompt pops up. The 
 advantage is you can disconnect and let it run in the background. Run
-"make config" and check Xvfb to enable this option.
+"make config" and check Xvfb to enable this option. Enabing this option
+also will install x11vnc which will be required for this.
 
-You need to install x11vnc: "pkg_add -r x11vnc" and add the following
-lines to /usr/local/sbin/jdownloader:
+You need add the following lines to /usr/local/sbin/jdownloader:
 
 Xvfb :1 -screen 0 1024x768x16
 export DISPLAY=:1

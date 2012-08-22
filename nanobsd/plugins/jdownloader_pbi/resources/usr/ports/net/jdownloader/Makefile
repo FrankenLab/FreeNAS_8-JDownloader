@@ -24,7 +24,7 @@ USE_ZIP=		yes
 JAVA_VERSION=		1.7+
 JAVA_RUN=		yes
 
-OPTIONS_DEFINE=	XVFB
+OPTIONS=		XVFB "Enable Virtual X Display for JDownloader"	On
 
 WRKSRC=			${WRKDIR}/${PORTNAME}
 DATADIR=        	${JAVASHAREDIR}/${PORTNAME}
@@ -34,13 +34,14 @@ SUB_LIST+=		USER=${USERS}
 RESTRICTED=		License does not allow selling
 USERS=			www
 GROUPS=			www
+PID_FILE=		/var/run/${PORTNAME}/${PORTNAME}.pid
 
-#.include <bsd.port.options.mk>
-.include <bsd.port.pre.mk>
+.include <bsd.port.options.mk>
 
 # Xvfb
-.if ${PORT_OPTIONS:MXVFB}
-RUN_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver x11vnc:${PORTSDIR}/net/x11vnc
+.if defined(WITH_XVFB)
+RUN_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver \
+		x11vnc:${PORTSDIR}/net/x11vnc
 .endif
 
 post-extract:
@@ -56,8 +57,10 @@ post-extract:
 	@${RM} -rf ${WRKDIR}/JDownloader/tools/mac
 
 do-install:
-	(cd ${WRKSRC}/ && ${COPYTREE_SHARE} \* ${DATADIR})
-	${INSTALL_SCRIPT} ${WRKDIR}/jdownloader ${PREFIX}/sbin
+	@(cd ${WRKSRC}/ && ${COPYTREE_SHARE} \* ${DATADIR})
+	@${INSTALL} -o ${USERS} -g ${GROUPS} ${WRKDIR}/jdownloader ${PREFIX}/sbin
+	@${INSTALL} -d -o ${USERS} -g ${GROUPS} -m 0750 /var/run/${PORTNAME} /var/log/${PORTNAME}
+#	${CHOWN} -R ${USERS}:${GROUPS} /var/log/${PORTNAME} /var/run/${PORTNAME}
 
 .if !exists(${DISTDIR}/${DIST_SUBDIR}/${DISTNAME}${EXTRACT_SUFX})
 DISTFILE_INSTRUCTIONS   =       \n

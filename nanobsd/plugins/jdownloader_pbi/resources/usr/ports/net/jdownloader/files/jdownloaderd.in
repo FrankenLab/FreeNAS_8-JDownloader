@@ -17,7 +17,7 @@
 name="jdownloader"
 rcvar=${name}_enable
 
-pidfile=/var/run/jdownloader.pid
+pidfile=/var/run/JDownloader/JDownloader.pid
 command=%%PREFIX%%/sbin/jdownloader
 
 load_rc_config $name
@@ -49,4 +49,4 @@ run_rc_command "$1"
 
 # Need to wait for Java to start before getting PID
 sleep 2
-pgrep -U www -f JDownloader.jar > /var/run/jdownloader.pid
+pgrep -U www -f JDownloader.jar > /var/run/JDownloader/JDownloader.pid
