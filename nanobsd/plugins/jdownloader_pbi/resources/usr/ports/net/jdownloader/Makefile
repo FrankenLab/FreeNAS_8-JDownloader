@@ -56,7 +56,7 @@ post-extract:
 
 do-install:
 	(cd ${WRKSRC}/ && ${COPYTREE_SHARE} \* ${DATADIR})
-	${INSTALL_SCRIPT} ${WRKDIR}/jdownloaderd ${PREFIX}/sbin
+	${INSTALL_SCRIPT} ${WRKDIR}/jdownloader ${PREFIX}/sbin
 
 .if !exists(${DISTDIR}/${DIST_SUBDIR}/${DISTNAME}${EXTRACT_SUFX})
 DISTFILE_INSTRUCTIONS   =       \n
