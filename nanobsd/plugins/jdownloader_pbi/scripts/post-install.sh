@@ -8,19 +8,12 @@ mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www
 pw useradd www -g www -G wheel -s /usr/local/bin/bash -d /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home -w none
 
-chown www:www /usr/pbi/jdownloader-`uname -m`/MEDIA
-chmod 775 /usr/pbi/jdownloader-`uname -m`/MEDIA
+mkdir -p www:www /usr/pbi/jdownloader-`uname -m`/downloads
+chown www:www /usr/pbi/jdownloader-`uname -m`/downloads
+chmod 775 /usr/pbi/jdownloader-`uname -m`/downloads
 
-# Copy patched RC file over automatically generated one
-mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/rc.d/
-chmod 755 /usr/pbi/jdownloader-`uname -m`/jdownloader.RC
-cp /usr/pbi/jdownloader-`uname -m`/jdownloader.RC /usr/pbi/jdownloader-`uname -m`/etc/rc.d/jdownloader
-
-
-# Add JAIL_IP into /usr/pbi/sbin/jdownloaderd
-# Probably should add JAIL_IP line into jdownloaderd
-
-JAIL_IP=`ifconfig  | grep -E 'inet.[0-9]' | grep -v '127.0.0.1' | awk '{ print \$2}'`
+rm -rf /usr/pbi/jdownloader-`uname -m`/usr
+#/usr/pbi/jdownloader-amd64/usr/ports/net/jdownloader
 
 echo $JAIL_IP"	"`hostname` >> /etc/hosts
 
