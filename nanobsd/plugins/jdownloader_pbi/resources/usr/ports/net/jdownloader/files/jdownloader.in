@@ -7,7 +7,7 @@
 #export DISPLAY=192.168.1.1:0.0
 #
 
-exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar
+exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar >> /var/log/jdownloader.log 2>&1
 
 # Need to wait for Java to start before getting PID
 sleep 2
