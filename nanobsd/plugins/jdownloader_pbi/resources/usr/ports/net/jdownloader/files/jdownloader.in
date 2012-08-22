@@ -11,4 +11,4 @@ exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar >> /var/log
 
 # Need to wait for Java to start before getting PID
 sleep 2
-pgrep -U www -f jdownloader > /var/run/jdownloader.pid
+pgrep -U www -f JDownloader.jar > /var/run/jdownloader.pid
