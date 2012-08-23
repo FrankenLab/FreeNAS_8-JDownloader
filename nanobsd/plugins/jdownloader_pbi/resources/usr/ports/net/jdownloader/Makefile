@@ -59,7 +59,7 @@ post-extract:
 do-install:
 	@(cd ${WRKSRC}/ && ${COPYTREE_SHARE} \* ${DATADIR})
 	@${INSTALL} -o ${USERS} -g ${GROUPS} ${WRKDIR}/jdownloader ${PREFIX}/sbin/
-	${CP} ${WRKDIR}/jdownloader ${PREFIX}/JDOWNLOADER
+	${CP} ${WRKDIR}/jdownloader ${PREFIX}/JDOWNLOADER.example
 	@${INSTALL} -d -o ${USERS} -g ${GROUPS} -m 0750 /var/run/${PORTNAME} /var/log/${PORTNAME}
 #	${CHOWN} -R ${USERS}:${GROUPS} /var/log/${PORTNAME} /var/run/${PORTNAME}
 
