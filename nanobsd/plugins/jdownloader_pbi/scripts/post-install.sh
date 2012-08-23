@@ -7,7 +7,7 @@ echo libz.so.4 libz.so.5 > /usr/pbi/jdownloader-`uname -m`/etc/libmap.conf
 #chown www:www /usr/pbi/jdownloader-`uname -m`/sbin/jdownloader
 #chown -R www:www /usr/pbi/jdownloader-`uname -m`/
 
-sed -i '' -e "s,exec java,exec ${SERVIIO_HOME}/bin/java,g" ${SERVIIO_HOME}/sbin/serviio
+sed -i '' -e "s,exec java,exec ${JDOWNLOADER_HOME}/bin/java,g" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www
