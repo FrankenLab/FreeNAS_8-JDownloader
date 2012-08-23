@@ -28,4 +28,4 @@ echo $JAIL_IP"	"`hostname` >> /etc/hosts
 echo 'jdownloader_flags=""' > /usr/pbi/jdownloader-`uname -m`/etc/rc.conf
 echo 'jdownloader_flags=""' > /etc/rc.conf
 
-/usr/pbi/jdownloader-`uname -m`/bin/python /usr/pbi/jdownloader-`uname -m`/jdownloaderUI/manage.py syncdb --migrate --noinput
+/usr/pbi/jdownloader-`uname -m`/bin/python /usr/pbi/jdownloader-`uname -m`/JDownloaderUI/manage.py syncdb --migrate --noinput
