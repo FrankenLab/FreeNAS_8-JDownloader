@@ -18,7 +18,7 @@ You need to install x11vnc: "pkg_add -r x11vnc" and then you also
 need to edit/add the following lines to /usr/local/sbin/jdownloader:
 
 Xvfb :1 -screen 0 1024x768x16 & x11vnc -usepw -nevershared -forever -display :1
-exec java -Xmx512m -jar /usr/local/share/java/JDownloader/JDownloader.jar -rfu
+exec java -Xmx512m -jar /usr/local/share/java/JDownloader/JDownloader.jar
 
 The first time you run the command it will ask you to choose a password
 that you will use when connecting with VNC.
