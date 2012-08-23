@@ -18,7 +18,7 @@ jdownloader_etc_path = os.path.join(jdownloader_pbi_path, "etc")
 jdownloader_mnt_path = os.path.join(jdownloader_pbi_path, "mnt")
 jdownloader_fcgi_pidfile = "/var/run/fcgi_jdownloader.pid"
 jdownloader_fcgi_wwwdir = os.path.join(jdownloader_pbi_path, "www")
-jdownloader_control = "/usr/local/etc/rc.d/jdownloader"
+jdownloader_control = "/usr/local/etc/rc.d/jdownloaderd"
 
 
 def jdownloader_fcgi_start(args):
@@ -36,7 +36,7 @@ def jdownloader_fcgi_start(args):
 
     os.setsid()
 
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'jdownloaderUI.settings'
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'JDownloaderUI.settings'
     import django.core.handlers.wsgi
     app = django.core.handlers.wsgi.WSGIHandler()
 
