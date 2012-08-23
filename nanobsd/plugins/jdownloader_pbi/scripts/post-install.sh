@@ -1,5 +1,7 @@
 #!/bin/sh
 
+JDOWNLOADER_HOME=/usr/pbi/jdownloader-`uname -m`
+
 echo libz.so.4 libz.so.5 > /etc/libmap.conf
 echo libz.so.4 libz.so.5 > /usr/pbi/jdownloader-`uname -m`/etc/libmap.conf
 
