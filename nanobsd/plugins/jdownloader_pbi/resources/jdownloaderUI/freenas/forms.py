@@ -5,7 +5,7 @@ import pwd
 from django.utils.translation import ugettext_lazy as _
 
 from dojango import forms
-from JDownloaderUI.freenas import models, utils
+from jdownloaderUI.freenas import models, utils
 
 
 class JDownloaderForm(forms.ModelForm):

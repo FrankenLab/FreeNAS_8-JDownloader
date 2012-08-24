@@ -14,7 +14,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils import simplejson
 
-from JDownloaderUI.freenas import forms, models, utils
+from jdownloaderUI.freenas import forms, models, utils
 
 import jsonrpclib
 import urllib2

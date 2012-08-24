@@ -104,7 +104,7 @@ MIDDLEWARE_CLASSES = (
 
 FORCE_SCRIPT_NAME = ''
 
-ROOT_URLCONF = 'JDownloaderUI.urls'
+ROOT_URLCONF = 'jdownloaderUI.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -130,7 +130,7 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     #'django.contrib.messages',
     'django.contrib.staticfiles',
-    'JDownloaderUI.freenas',
+    'jdownloaderUI.freenas',
     'south',
 )
 

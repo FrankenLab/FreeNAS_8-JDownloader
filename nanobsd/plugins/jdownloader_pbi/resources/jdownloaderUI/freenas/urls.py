@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 
-urlpatterns = patterns('JDownloaderUI.freenas.views',
+urlpatterns = patterns('jdownloaderUI.freenas.views',
      url(r'^edit$', 'edit', name="jdownloader_edit"),
      url(r'^treemenu-icon$', 'treemenu_icon', name="treemenu_icon"),
      url(r'^_s/treemenu$', 'treemenu', name="treemenu"),
