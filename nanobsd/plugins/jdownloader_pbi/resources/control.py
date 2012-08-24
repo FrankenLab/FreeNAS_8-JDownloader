@@ -36,7 +36,7 @@ def jdownloader_fcgi_start(args):
 
     os.setsid()
 
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'JDownloaderUI.settings'
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'jdownloaderUI.settings'
     import django.core.handlers.wsgi
     app = django.core.handlers.wsgi.WSGIHandler()
 
