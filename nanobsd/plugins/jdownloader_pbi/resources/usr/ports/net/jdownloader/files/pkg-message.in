@@ -11,7 +11,7 @@ advantage is you can disconnect and let it run in the background. Run
 "make config" and check Xvfb to enable this option. Enabing this option
 also will install x11vnc which will be required for this.
 
-You need add the following lines to /usr/local/sbin/jdownloader:
+You need add/change the following lines to /usr/local/sbin/jdownloader:
 
 Xvfb :1 -screen 0 1024x768x16
 
@@ -41,5 +41,6 @@ portupgrade and portmaster can be found in /usr/ports/ports-mgmt
 JDownloader also has several different web interface plugins you can enable
 from the GUI which allow you to control and add downloads.
 
-If you choose to uninstall JDownloader, there may be some config and temporary
-files in %%JAVASHAREDIR%%/JDownloader that need to be removed manually.
+If you choose to uninstall JDownloader, there may be some uniquely named
+config and temporary files in %%JAVASHAREDIR%%/JDownloader that need to
+be removed manually.

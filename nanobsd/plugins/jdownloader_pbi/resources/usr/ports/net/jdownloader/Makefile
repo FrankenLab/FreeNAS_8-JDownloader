@@ -24,7 +24,7 @@ USE_ZIP=		yes
 JAVA_VERSION=		1.7+
 JAVA_RUN=		yes
 
-OPTIONS=		XVFB "Enable Virtual X Display for JDownloader"	On
+OPTIONS=		XVFB "Enable Virtual X Display for JDownloader"	Off
 
 WRKSRC=			${WRKDIR}/${PORTNAME}
 DATADIR=        	${JAVASHAREDIR}/${PORTNAME}

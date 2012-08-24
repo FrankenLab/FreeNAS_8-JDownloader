@@ -1857,4 +1857,5 @@ sbin/jdownloader
 @dirrm %%JAVASHAREDIR%%/JDownloader/plugins/webinterface
 @dirrm %%JAVASHAREDIR%%/JDownloader/plugins
 @dirrm %%JAVASHAREDIR%%/JDownloader/tools
+@dirrm %%JAVASHAREDIR%%/JDownloader/tmp
 @dirrm %%JAVASHAREDIR%%/JDownloader

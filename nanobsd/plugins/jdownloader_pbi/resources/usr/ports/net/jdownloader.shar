@@ -1,0 +1,2101 @@
+# This is a shell archive.  Save it in a file, remove anything before
+# this line, and then unpack it by entering "sh file".  Note, it may
+# create directories; files and directories will be owned by you and
+# have default permissions.
+#
+# This archive contains:
+#
+#	jdownloader
+#	jdownloader/Makefile
+#	jdownloader/distinfo
+#	jdownloader/files
+#	jdownloader/files/jdownloader.in
+#	jdownloader/files/jdownloaderd.in
+#	jdownloader/files/pkg-message.in
+#	jdownloader/pkg-descr
+#	jdownloader/scripts
+#	jdownloader/pkg-plist
+#
+echo c - jdownloader
+mkdir -p jdownloader > /dev/null 2>&1
+echo x - jdownloader/Makefile
+sed 's/^X//' >jdownloader/Makefile << 'c35faf69c11fdc566d8f234eeab68f75'
+X# New ports collection makefile for:	jdownloader
+X# Date created:		2012-08-03
+X# Whom:			R. Tristanaux <sdproto@gmail.com>
+X#
+X# $FreeBSD$
+X#
+X#
+X
+XPORTNAME=	JDownloader
+XDISTVERSION=	0.9.581
+XCATEGORIES=	net java www
+XMASTER_SITES=	http://94.23.204.158/
+XDISTNAME=	${PORTNAME}
+X
+XMAINTAINER=	sdproto@gmail.com
+XCOMMENT=	Captures HTML links and manages downloading targets
+X
+XRUN_DEPENDS=	unzip:${PORTSDIR}/archivers/unzip unrar:${PORTSDIR}/archivers/unrar wget:${PORTSDIR}/ftp/wget
+X
+XNO_BUILD=		yes
+XUSE_JAVA=		yes
+XJAVA_VENDOR=		openjdk
+XUSE_ZIP=		yes
+XJAVA_VERSION=		1.7+
+XJAVA_RUN=		yes
+X
+XOPTIONS=		XVFB "Enable Virtual X Display for JDownloader"	Off
+X
+XWRKSRC=			${WRKDIR}/${PORTNAME}
+XDATADIR=        	${JAVASHAREDIR}/${PORTNAME}
+XSUB_FILES+=		pkg-message jdownloader
+XUSE_RC_SUBR=		jdownloaderd
+XSUB_LIST+=		USER=${USERS}
+XRESTRICTED=		License does not allow selling
+XUSERS=			www
+XGROUPS=			www
+XPID_FILE=		/var/run/${PORTNAME}/${PORTNAME}.pid
+X
+X.include <bsd.port.options.mk>
+X
+X# Xvfb
+X.if defined(WITH_XVFB)
+XRUN_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver \
+X		x11vnc:${PORTSDIR}/net/x11vnc
+X.endif
+X
+Xpost-extract:
+X	@${RM} -f ${WRKDIR}/JDownloader/JDownloader.exe
+X	@${RM} -f ${WRKDIR}/JDownloader/JDownloaderBETA.exe
+X	@${RM} -f ${WRKDIR}/JDownloader/JDownloaderD3D.exe
+X	@${RM} -f ${WRKDIR}/JDownloader/JDUpdate.exe
+X	@${RM} -f ${WRKDIR}/JDownloader/windows_createlog.bat
+X	@${RM} -f ${WRKDIR}/JDownloader/windows_restore.bat
+X	@${RM} -f ${WRKDIR}/JDownloader/plugins/jdshutdown/windows/shutdown.exe
+X	@${RM} -rf ${WRKDIR}/JDownloader/tools/Windows
+X	@${RM} -rf ${WRKDIR}/JDownloader/tools/linux
+X	@${RM} -rf ${WRKDIR}/JDownloader/tools/mac
+X
+Xdo-install:
+X	@(cd ${WRKSRC}/ && ${COPYTREE_SHARE} \* ${DATADIR})
+X	@${INSTALL} -o ${USERS} -g ${GROUPS} ${WRKDIR}/jdownloader ${PREFIX}/sbin/
+X	${CP} ${WRKDIR}/jdownloader ${PREFIX}/JDOWNLOADER.example
+X	@${INSTALL} -d -o ${USERS} -g ${GROUPS} -m 0750 /var/run/${PORTNAME} /var/log/${PORTNAME}
+X#	${CHOWN} -R ${USERS}:${GROUPS} /var/log/${PORTNAME} /var/run/${PORTNAME}
+X
+X.if !exists(${DISTDIR}/${DIST_SUBDIR}/${DISTNAME}${EXTRACT_SUFX})
+XDISTFILE_INSTRUCTIONS   =       \n
+XDISTFILE_INSTRUCTIONS   +=      Download the distfile from http://94.23.204.158/JDownloader.zip\n
+XDISTFILE_INSTRUCTIONS   +=      and copy it to /usr/ports/distfiles.\n
+X.endif
+X
+Xpost-install:
+X	# =========================================================
+X	@${FMT} ${PKGMESSAGE}
+X	# =========================================================
+X
+X.include <bsd.port.mk>
+c35faf69c11fdc566d8f234eeab68f75
+echo x - jdownloader/distinfo
+sed 's/^X//' >jdownloader/distinfo << '2aee23b9efb86e0e238c82390315ebb2'
+XSHA256 (JDownloader.zip) = 3ec0c04213efe1ac427b19080363041d3c53a29bdf302ec8e1ac1a84770b60b5
+XSIZE (JDownloader.zip) = 31419822
+2aee23b9efb86e0e238c82390315ebb2
+echo c - jdownloader/files
+mkdir -p jdownloader/files > /dev/null 2>&1
+echo x - jdownloader/files/jdownloader.in
+sed 's/^X//' >jdownloader/files/jdownloader.in << '78ae215494efd36fe4038bf609bdc417'
+X#!/bin/sh
+X#
+X# $FreeBSD$
+X
+X# Change IP address in line below to the IP address of your X11 Server/Display
+X# and remove the # at the beginning of the line
+X# export DISPLAY=192.168.1.1:0.0
+X#
+X# Uncomment the next 3 lines if you want to use Xvfb as your virtual X display
+X# Xvfb :1 -screen 0 1024x768x16
+X# export DISPLAY=:1
+X# exec x11vnc -usepw -nevershared -forever -display :1
+X
+Xexec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar >> /var/log/JDownloader/JDownloader.log 2>&1 &
+78ae215494efd36fe4038bf609bdc417
+echo x - jdownloader/files/jdownloaderd.in
+sed 's/^X//' >jdownloader/files/jdownloaderd.in << '8104fb20ec0428876670727273ff9c57'
+X#!/bin/sh
+X#
+X# PROVIDE: jdownloader
+X# REQUIRE: LOGIN 
+X# KEYWORD: shutdown
+X# $FreeBSD$
+X#
+X# Add the following lines to /etc/rc.conf to enable this service:
+X#
+X# jdownloader_enable:            Set to NO by default. Set it to YES to enable it.
+X#                            a path.
+X# jdownloader_user:              The user account jdownloader daemon runs as
+X#
+X
+X. /etc/rc.subr
+X
+Xname="jdownloader"
+Xrcvar=${name}_enable
+X
+Xpidfile=/var/run/JDownloader/JDownloader.pid
+Xcommand=%%PREFIX%%/sbin/jdownloader
+X
+Xload_rc_config $name
+X
+Xjdownloader_user=${jdownloader_user-"www"}
+X
+Xcommand_args="$jdownloader_args"
+X
+Xjdownloader_stop()
+X{
+X        res=1
+X        echo -n 'Stopping jdownloader.'
+X        if [ -f "${pidfile}" ]
+X        then
+X                kill -KILL $(cat "${pidfile}")
+X                rm -f ${pidfile}
+X                res=$?
+X        else
+X                killall -KILL jdownloader
+X                res=$?
+X        fi
+X
+X        echo
+X        return ${res}
+X}
+X
+Xstop_cmd='jdownloader_stop'
+Xrun_rc_command "$1"
+X
+X# Need to wait for Java to start before getting PID
+Xsleep 2
+Xpgrep -U www -f JDownloader.jar > /var/run/JDownloader/JDownloader.pid
+8104fb20ec0428876670727273ff9c57
+echo x - jdownloader/files/pkg-message.in
+sed 's/^X//' >jdownloader/files/pkg-message.in << '1daf887d93180cd7cd1cc5f8a30e5dbd'
+XYou need to set/EXPORT your X11 DISPLAY variable before running JDownloader.
+XIn the jdownloader script located in /usr/local/sbin, there is an example line
+Xcommented out.
+X
+XIf you prefer to run JDownloader "Headless", Xvfb has been included as
+Xan option so you can then use VNC to attach and control a virtual
+XX Display, Xvfb and view JDownloader. The disadvantage to this method
+Xis that JDownloader will not be able to detect selected links from
+Xthe client and also may possibly crash if a catcha prompt pops up. The 
+Xadvantage is you can disconnect and let it run in the background. Run
+X"make config" and check Xvfb to enable this option. Enabing this option
+Xalso will install x11vnc which will be required for this.
+X
+XYou need add/change the following lines to /usr/local/sbin/jdownloader:
+X
+XXvfb :1 -screen 0 1024x768x16
+X
+Xexport DISPLAY=:1
+X
+Xexec x11vnc -usepw -nevershared -forever -display :1
+X
+Xexec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar
+X
+X
+XNow start your vnc client and connect to the IP address of the system
+Xrunning JDownloader.
+X
+XThe first time you run x11vnc, it will ask you to choose a password
+Xyou will use when connecting with VNC.
+X
+XIf you run into difficulties building with this option, try the following:
+X
+X1) make sure you update libdrm (portupgrade -f libdrm)
+X
+X2) Update pcre (portmaster -r pcre-8.31)
+X
+X3) cd /usr/local/ports/textproc/p5-XML-Parser and make reinstall
+X
+Xportupgrade and portmaster can be found in /usr/ports/ports-mgmt
+X
+XJDownloader also has several different web interface plugins you can enable
+Xfrom the GUI which allow you to control and add downloads.
+X
+XIf you choose to uninstall JDownloader, there may be some uniquely named
+Xconfig and temporary files in %%JAVASHAREDIR%%/JDownloader that need to
+Xbe removed manually.
+1daf887d93180cd7cd1cc5f8a30e5dbd
+echo x - jdownloader/pkg-descr
+sed 's/^X//' >jdownloader/pkg-descr << '39617baf9779ac307b401448c2985254'
+XJDownloader is a powerful download manager which can capture selected links for
+Xfiles and queue them for download.
+39617baf9779ac307b401448c2985254
+echo c - jdownloader/scripts
+mkdir -p jdownloader/scripts > /dev/null 2>&1
+echo x - jdownloader/pkg-plist
+sed 's/^X//' >jdownloader/pkg-plist << '283f8e3d6b7181d959061910ea8641b2'
+Xsbin/jdownloader
+X%%JAVASHAREDIR%%/JDownloader/JDownloader.jar
+X%%JAVASHAREDIR%%/JDownloader/java/donotdelete.me
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/captcha.extract
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bdng/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bdng/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bdng/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bdng/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bgpld/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bgpld/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bgpld/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bgpld/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bgpld/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bmbmp3cm/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bmbmp3cm/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bmbmp3cm/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bmbmp3cm/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bmbmp3cm/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bstmvss/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bstmvss/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bstmvss/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bstmvss/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cbrsharsk/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cbrsharsk/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cbrsharsk/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cbrsharsk/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cbrsharsk/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cllctrnt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cllctrnt/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cllctrnt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cllctrnt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cllctrnt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cms/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cms/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cms/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cms/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cms/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cms/mask_1254381321904.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cms/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnnt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnnt/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnnt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnnt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnnt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnt/bgimages2.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnt/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnt/mask_3624aa4f962869bd6825a850a48df0c8.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptlnk/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptlnk/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptlnk/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptlnk/mask.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptlnk/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm/mask_1250605046932.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm2/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm2/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm2/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm2/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptng/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptng/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptng/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptng/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cryptt/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cryptt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cryptt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cryptt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/czshr/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/czshr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/czshr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/czshr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dckld/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dckld/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dckld/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dckld/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dckld/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dskcz/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dskcz/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dskcz/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dskcz/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dskcz/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/easycaptcha/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/easycaptcha/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/eshr/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/eshr/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/eshr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/eshr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/eshr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fl/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fl/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fl/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flbs/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flbs/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flbs/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flbs/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fldrr/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fldrr/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fldrr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fldrr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fldrr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flrck/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flrck/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flrck/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flrck/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flshren/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flshren/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flshren/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flshren/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flshren/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flsrf/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flsrf/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flsrf/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flsrf/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flsrf/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flst/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flst/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flst/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flst/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flst/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggp/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggp/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggp/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggp/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggp/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggpt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggpt/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggpt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggpt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggpt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggsz/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggsz/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggsz/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggsz/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gshre/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gshre/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gshre/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gshre/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gtpp/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gtpp/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gtpp/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gtpp/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/hstjnt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/hstjnt/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/hstjnt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/hstjnt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/hstjnt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/bgimages2.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/example1.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/example2.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/example3.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/example4.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/example5.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/example6.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/mask_18032bf345dd9c332cc46e1ce8237938.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/mask_18d392ccb51406f2aea9a0d4c0c91a19.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/mask_1cacb4fb478f7a3a3fc214a40df88b7c.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/mask_2d72e6ee9bc6a3e29748a7d97ec49818.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/mask_6e2cf08f1f245aa87a5b5b4d1b8668f6.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/mask_bfa3fb23f0f81f5fffc86ef562ff9d43.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/mask_d934f5abbfc6de7bdf718fe636ac33c2.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/bgmask.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/bgmask_1.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/example1.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/example2.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/example3.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/example4.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrpt/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrpt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrpt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrpt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrptwsCircles/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrptwsCircles/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrptwsCircles/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkfl/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkfl/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkfl/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkfl/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkfl/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_0cd103144a0ebe045b2a6edbbf599282.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_1e0a34c048960d7044312e6321a55d85.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_3da65bb627a8c069997ee1f7c11cbaba.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_6d16f51215fc74de04a4438eec6e06e3.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_716c138c1a7e481afffdbaa9b458e548.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_7b8b18945955a26f081bed4700779540.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_db49e250886817270c853435419a07d7.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_e76a699cfa1a2ba6969b5dadbe968975.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/mask_ffce492cc527c5d786f9bd894ee0857e.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/mask_1252324258579.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/mask_1252324340130.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/mask_1252324436441.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lttbt/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lttbt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lttbt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lttbt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lxn/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lxn/LoadImage.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lxn/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lxn/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lxn/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lxn/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mg1280/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mg1280/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mg1280/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mg1280/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgpld/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgpld/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgpld/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgpld/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshre/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshre/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshre/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshre/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshre/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshre/mask.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshre/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshrs2/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshrs2/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshrs2/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshrs2/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mshr/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mshr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mshr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mshr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mvwrldnt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mvwrldnt/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mvwrldnt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mvwrldnt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mvwrldnt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nrdr/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nrdr/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nrdr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nrdr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nrdr/mask_1252597944520.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nrdr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ntldn/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ntldn/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ntldn/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ntldn/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ntldn/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nzllnkssrnjnksrg/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nzllnkssrnjnksrg/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nzllnkssrnjnksrg/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nzllnkssrnjnksrg/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nzllnkssrnjnksrg/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nzllnkssrnjnksrg/mask_1253448918730.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nzllnkssrnjnksrg/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/o4fc/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/o4fc/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/o4fc/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/o4fc/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldbx/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldbx/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldbx/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldbx/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldcm/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldcm/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldcm/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldcm/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldcm/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/bgimages2.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/mask_1250779472014.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/mask_1253806940739.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctmylnkscm/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctmylnkscm/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctmylnkscm/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctmylnkscm/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctmylnkscm/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctmylnkscm/mask_1253444955554.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctmylnkscm/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctr/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctr/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/LoadImage.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/bgimages.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/Disk.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/Roteherz.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/alteshaus.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/apfel.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/azureuslogo.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/baer.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/beschwerde.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/blau.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/bluetooth.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/bruecke.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/eichhoernchen.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/erdnusflips.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/fenster.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/feuerwerk.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/firefox.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/flashlogo.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/frosch.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/fuchs.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/fussspur.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/gelb.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/gelbentruck.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/hoernchen.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/jestercap.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/katze.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/kuhkopf.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/lock.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/lupenblume.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/mario.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/maus.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/moeye.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/quad.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/rot.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/schildkroete.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/schlange.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/schloss.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/tanne.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/tannenzapfen.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/tracktor.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/trompete.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/wasser.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/windrad.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images/youtube.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/mask_1250852030683.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/mask_1250852764590.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/mask_1250852866838.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/mask_1250852912310.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/mask_1250852953468.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/mask_19674a58038c03176459809579a48c9c.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/mask_c7c04b56d7c9721a12ca8aa3dfa5763c.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/mask_f2fbdcd60265f6ced0019a583441acee.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rbkprrws/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rbkprrws/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rbkprrws/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rbkprrws/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlcrpt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlcrpt/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlcrpt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlcrpt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlcrpt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlshld/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlshld/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlshld/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlshld/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rmfrksnt/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rmfrksnt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rmfrksnt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdgcm/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdgcm/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdgcm/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdgcm/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdgcm/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdlbrr/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdlbrr/LoadImage.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdlbrr/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdlbrr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdlbrr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdlbrr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdshr/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdshr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdshr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdshr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rslr/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rslr/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rslr/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rslr/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scmn/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scmn/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scmn/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scmn/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scrd/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scrd/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scrd/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scrd/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sld/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sld/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sld/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sld/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/strmprtct/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/strmprtct/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/strmprtct/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/strmprtct/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/strmprtct/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sxvdt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sxvdt/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sxvdt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sxvdt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sxvdt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/trbbt/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/trbbt/example.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/trbbt/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/trbbt/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/trbbt/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ugtf/CPoints.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ugtf/example.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ugtf/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ugtf/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ugtf/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ugtf/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/vdsz/LoadImage.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/wrldd/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/wrldd/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/wrldd/mask.png
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/wrldd/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/zdd/example.jpg
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/zdd/jacinfo.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/zdd/letters.mth
+X%%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/zdd/script.jas
+X%%JAVASHAREDIR%%/JDownloader/jd/dummy.js
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/Facebook$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/Facebook$FBDialog$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/Facebook$FBDialog.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/Facebook.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/FallbackAntiNPE$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/FallbackAntiNPE$2$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/FallbackAntiNPE$2.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/FallbackAntiNPE.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/Seeking.class
+X%%JAVASHAREDIR%%/JDownloader/jd/dynamics/XTMWorkaround.class
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/17_32x32.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/accessories-text-editor.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/accounts.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/applications-internet.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/applications-system.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/appointment-new.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/bad.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/button_languages.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/clipboard_dis.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/clipboard_en.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/close.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/contact-new.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/cursor/help.gif
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/cursor/help.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/dialog-error.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/dialog-information.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/dialog-warning.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/disabled.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/document-new.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/document-offline.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/document-open.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/document-open_error.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/document-save.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/drive-removable-media.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-clear.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-copy.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-cut.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-delete.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-find-replace.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-find.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-paste.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-redo.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-select-all.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit-undo.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/edit_redo.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/emblem-unreadable.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/enabled.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/enlarge_bottom.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/enlarge_left.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/enlarge_right.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/enlarge_top.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/enlarge_vertical.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/face-sad.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/face-smile.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/filter.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/flashgot.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/folder-_add_package.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/folder-new.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/folder-open.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/folder-open_add.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/folder-remote.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/folder-visiting.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/folder-visiting_add.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/folder.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/font-x-generic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/format-text-italic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/forward.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-bottom.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-down.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-first.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-jump.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-last.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-next.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-previous.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-top.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/go-up.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/help-browser.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/internet-group-chat.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/internet-web-browser.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/key.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/language.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/list-add.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/list-remove.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/list-remove_disabled.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/list.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/logomenu.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mail-attachment.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/media-floppy.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/media-playback-pause.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/media-playback-start.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/media-playback-stop.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/merge.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/application-certificate.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/application-x-executable.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/audio-x-generic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/font-x-generic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/image-x-generic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/package-x-generic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/text-html.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/text-x-generic-template.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/text-x-generic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/text-x-script.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/video-x-generic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-address-book.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-calendar.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-document-template.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-document.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-drawing-template.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-drawing.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-presentation-template.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-presentation.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-spreadsheet-template.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/mime/x-office-spreadsheet.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/minimize_bottom.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/minimize_left.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/minimize_right.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/minimize_top.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/network-error.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/network-idle.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/network-server.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/ok.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/package-x-generic.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/package-x-generic_.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/package-x-generic_close.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/package-x-generic_close_.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/package-x-generic_close_failed.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/package-x-generic_close_failed_.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/package-x-generic_failed.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/package-x-generic_failed_.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/pause.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/play.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/play_smart.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/preferences-desktop-assistive-technology.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/preferences-desktop-wallpaper.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/preferences-desktop.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/preferences-system.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/premium.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/premium_disabled.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/premium_enabled.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/prio_-1.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/prio_0.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/prio_1.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/prio_2.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/prio_3.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/process-stop.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/reconnect_cfg.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/reconnect_disabled.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/reconnect_enabled.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/reconnect_select.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/record.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/remove-all.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/remove-dupes.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/remove-failed.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/remove-ok.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/software-update-available.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/sort.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/stop.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/stop_after_disabled_big.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/stop_after_disabled_small.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/stop_after_enabled_big.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/stop_after_enabled_small.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/system-file-manager.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/system-log-out.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/system-search-add.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/system-search.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/system-software-update.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/user-home.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/user-trash.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/utilities-terminal.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/view-refresh-warning.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/view-refresh.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/window-new.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/default/x.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/flashgot_logo.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/flashgot_logo_0.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/bluehost.to.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/circle.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/depositfiles.com.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/duckload.com.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/filesonic.com.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/netload.in.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/qshare.com.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/rapidshare.com.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/shragle.com.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/storage.to.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos/uploaded.to.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/img.extract
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/cnl.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/icon.ico
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/jd_logo_128_128.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/jd_logo_256_256.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/jd_logo_54_54.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/jd_logo_54_54_trans.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/jd_logo_64_64.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/logo_14_14.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/logo_15_15.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/logo_16_16.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/logo_17_17.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/logo_18_18.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/logo_19_19.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/logo/logo_20_20.png
+X%%JAVASHAREDIR%%/JDownloader/jd/img/splash.png
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/ar.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/az.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/bs.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/ca.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/cs.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/da.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/de.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/el.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/en.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/es-catalan.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/es.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/fr.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/gl.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/he.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/hr-incomplete.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/hu.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/it.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/ja.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/ko-incomplete.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/languages.extract
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/lt.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/nl.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/pl.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/pt-BR.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/pt-PT.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/ro.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/ru.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/sk.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/sl-incomplete.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/sr-latin.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/sr.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/tr.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/uk-incomplete.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/vi.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/zh-hans.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/languages/zh-hant.loc
+X%%JAVASHAREDIR%%/JDownloader/jd/mime.type
+X%%JAVASHAREDIR%%/JDownloader/jd/osx/growlNotification.scpt
+X%%JAVASHAREDIR%%/JDownloader/jd/osx/osxhibernate.scpt
+X%%JAVASHAREDIR%%/JDownloader/jd/osx/osxshutdown.scpt
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/AbEmPeThreeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/AbloadDeGallery.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/AffgBz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/AlbumEE.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/AniLinkzCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/AppleTrailer.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ArchieveOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/AsapLoadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/AvxHmeW.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/BMp3Cm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/BdngCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/BeeEmPeThreeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/BingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/BitShareComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/BlgXXNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/BlurWs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Brds4Chnrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/BxNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CMS.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CNL.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ChThnhInfo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ChoMikujPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Cllctr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ClpfshD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CnT.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CnnT.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CntrstrkD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CramitInUser.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CrptBxCC.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CrptCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CrptNgBz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CrptTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Crptlnkws.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Crptngt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CrpttCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/CrstlWrzN.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DBtsNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DDLMscrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DDLWrz$DDLWrz_Linkgrabber.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DDLWrz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DLdr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DckLdCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DecrypterForRedirectServicesWithoutDirectRedirects.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DeviantClipComGallery.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DpstFlsCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DrDlm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DtLdngCmFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DuckLoadComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/DvShrCmFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/EBlNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/EmbedUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/EvntZgerDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Ewe1Com.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ExUa.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ExtabitComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ExtremeProtectCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FDNLnksCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FcTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FileServeComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FilesMonsterComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FilesMonsterDecrypter.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Fl2pldNtFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlCrpCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlFctrFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlShrnFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlStbCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlZnR.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Fldck.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlnksCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Flr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlsMailRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlshGt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FlsncCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FoldrUs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FotkaPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FotoAlbumEE.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FourMuCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FpsBananaCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FrShrdFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Frdwnldzs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FreeLoopsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FrkShrFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FrrlNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FrstLnkzNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FrstrlD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/FrznRomsN.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GameTrailersCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GeneralMultiuploadDecrypter.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GglBks.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GglGrps.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GigaFoundationDeDecrypter.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GmFrksNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GmdMscCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GoodNetFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GrvShrkCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/GzpCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HDTbccssCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HdLnkngCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HdMxTpsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HddnPnt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Hdrlbz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HdrthCx.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HiLvng.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HidsAt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HprLnkCshCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HrfRdrctr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HsLgndCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Hsbstzcm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/HtflCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/IFileItFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/IFolderFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/IlxN.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ImageHosterDecrypter.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ImageMinxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ImagesHackUs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ImgHvenNtGallery.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/IvPasteCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/JBbergCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/KndGrlsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/KnfflCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/KrM.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/KsRLCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LdT.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LdTTemp.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LetitBitNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LinkStoreUs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LiveDriveComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LlStrmnf.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LlpszNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkBCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkBcks.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkBlurCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkBnk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkCrptWs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkPrtctn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkPrtctrCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkSafeMe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkStackOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkTNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkcltCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LnkcrptCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Lnksfnf.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Lnkshld.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Lnksvn$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Lnksvn$1LsDirektLinkTH.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Lnksvn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LoShareComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Load2AllCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Load2Me.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LphLnk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LsnTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LstFmDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LtrstrWzCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Lxn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/LxyN.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MRf.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MassMirrorCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MdfBtCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MdfrFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MegaPrtcCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Mg1280CmFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MgcMsCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MgfpCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MgpldCmFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MiroriiCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MirrorCreatorCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MixBirdCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MllGnCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MltLadCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MltpldCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MndCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MngStrm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MnlnkUs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MnrlNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MotherLessCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Mov7Org.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MovStbeNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MovzTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Mp3Lnkrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MpUzhgrdNme.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MsCreNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MscPrtsOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Msclmntnf.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MtLnk$MetalinkSAXHandler.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MtLnk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MtlAreRg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MultiFileAm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MultiShareMe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MultiupOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MuzykaInteriaPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MvWrldNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MvdD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MxCloudCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MxiLnkCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/MyGkWs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NCryptIn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NGbbCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NkPlGallery.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NmLdsrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NmNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NmStrm24Com.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NnmT.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NrCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NsKhD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Ntfldrn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NwsrlD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/NwzFndCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/OdMscNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/OnDDlCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/OronComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PPcssNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PWProtectedRedirectorsDecrypter.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Paid4ShareFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Paste2Org.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PasteBinCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PcsaGgleCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PdPsteCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Pldckcm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PldingFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PlsssftsNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PlunderComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PrnHstComFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PrtcMyLnksCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PrtctLnksCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PrtctTOg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PrtctThprdxcm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PrtctdScdvntCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PrtctrT.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/PrzeklejPlFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/QckLnkM.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RDMdthk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RFlsBzFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RLCsh.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RRfD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Rdrctr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Rdrshrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ReGetIt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ReverBnationCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RevisionThreeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RfrHshCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RlCtCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RlShldnt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RlnkNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Rlnks.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RlnktCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Rlslg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RmFrksNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RmHstlrNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RmNwsrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RmsZphrNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RmxShrCmFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpDogCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpdFldrCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpdLbrr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpdShreNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpdSprdCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpdsfD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Rpdsfnt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpdshrCmFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpdshrM.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Rpdshrknt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RpprsIn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Rs43Cm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RsHrbchn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RsLrCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RsMnkCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RsdStr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/RsprtctCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SShrFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SagStbeToDl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Scmn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Scrd$Cypher.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Scrd.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SdxCc.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SendspaceComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SflnkgNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShareCxFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShareMoleCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShareaPicNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShortTextCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShrBCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShrBsTFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShrLnksBz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShrSwftCmFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShragleComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShrngMtrxCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShrnknCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ShrnlneBzFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SixMirrorsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SkGlbeRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SkipFileComUser.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Sldn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SndSnapDecrypt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SnrlCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SourceForgeNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SpglD.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SprdLnkUs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SprpldrNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SprzrCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SrBoxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Srnnks$DecryptRunnable.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Srnnks.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SrnnksCategory$Format.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SrnnksCategory$IdNamePair.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SrnnksCategory$Link.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SrnnksCategory.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Stlth.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/StrPrtctNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SurfMvsOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SveLnksRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SxVdT.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Sxrcm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/SzrtPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TLnkParaCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TakhzenCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TbCm$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TbCm$2.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TbCm$ConvertDialog$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TbCm$ConvertDialog$ConversionMode.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TbCm$ConvertDialog.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TbCm$DestinationFormat.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TbCm$Info.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TbCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Tchnrckrnf.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TeleMuCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TextSnipCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TgfServicesComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TkdsyCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TkmflCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TlnkrCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Tnypst.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TopkySk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Try2LCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/TurboBitNetFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/UTl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/UlCrptCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/UnExtUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/UploadBudCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/UploadKeepComFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/UploadStoreNetFolder.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/VKontakteRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/VideoMarkizaSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/VtXn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/WCrptIn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Wb06d.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/WckdWsl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Wrdprss.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Wrldd.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/WrztPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/X7ToFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/XHamsterGallery.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/XXXBlg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Xa.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/XboxSoZoneCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/XfleSkCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/XlcNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Xlcm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Xnkt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/XnnLnkNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/XpnFldr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/YRlR.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ZdlCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ZmgpldCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ZrScWs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/Zro10BasicDecrypt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter/ZyvNt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ARDMediathek.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ASheMaleTubeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AddatHu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AdriveCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AirSpeedFilesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AktualneCentrumSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AllDrivesGe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AllSharesGe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AmateurBoobTubeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AnyFilesNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AppSceneOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ArchivTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AstrSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AxiFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/AzSharingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BabelZaptoOrgFfh.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BadongoCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BanaShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BaniCrazyInfo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BeatPlexityCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BebasUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BigAndFreeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BigFileIn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BigUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BiggeruploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BinGe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BitLoadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BitRoadDotNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BitShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BlipTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BlueFishTvCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BoxNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BrOnlineDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BreakCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BrsBoxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BuFilesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/BuckShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CZShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CamWinsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CashFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CeknitoSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ChThnhInfo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ChipDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ChoMikujPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ClipfishDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CobraShareSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ComboZipCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ComputerCentralAustraliaCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CraMitIn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CrackedCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CrazyUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CreaFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/CumFoxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DailyMotionCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DatPiffCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DataHu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DataLoadingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DataPortCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Dataupde.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DateiTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DepositFiles.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DeviantClipCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DigiSoftsNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DirectHTTP$Recaptcha.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DirectHTTP.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DivShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DivXCloudCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DivxDenCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DivxStageNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DivxUpFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DiziPortCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DlFreeFr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DllBz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DnbShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DodajtoEu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DosyaTc.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DrTuberCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DropIo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DuckLoad$quark.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DuckLoad.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DumpRo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DumpRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/DynYooCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EHowCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EPornerCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EasyBytezCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EasyShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EdiskCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EeeShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EgoshareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EmpFlixCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EndlessAppsNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EnteruploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EuroShareEu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EvilShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ExFileRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ExoShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ExtaBitCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ExtraDjCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/EyVxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FaceBookComVideos.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FaiLaiLt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FarShareTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FastFileShareComAr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FastFreeFileHostingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FastHostCh.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FastShareorg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FckTubeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FeboShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/File2BoxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/File2UploadDotNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/File4SafeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/File4SaveCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileAm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileApeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileBaseTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileBitNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileBlingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileBrellaCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileCatchNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileChipCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileCrownCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileDudeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileFactory.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileFlyerCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileFrontCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileGigaCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileHippoCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileHookCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileHosterRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileKeeperOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileKeepingDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilePlanetComUa.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilePlayGroundCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileRackCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileSavrCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileSendNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileServeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileShareCc.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileShareInUa.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileShareRo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileSonicCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileSplashCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileStabCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileStageTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileStockRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileStoreComUa.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileSurfRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileTubeTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileUploadDotnet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileUploadXDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileVoCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileZoneRo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileboxRo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FiledropperCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilefrogTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilerCx.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilerNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesCloudCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesGe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesGwKz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesHackCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesMailRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesMonsterCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesNambaKz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilesTrackCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FileshakerCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilestoreTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilezUpCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FilezzzCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FisierulMeuRo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FlowHotInfo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FlowLoadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FlyShareCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FoFlyCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FourFastFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FourFreeLoadDotNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FourShareWs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FourSharedCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FourUploadRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FourUsTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FreakMovCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Freaksharenet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FreeBeatDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FreeFilesSharingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FreeLoadTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FreeShareRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FreeSpaceBy.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FreecasterTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FrogUpCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FsxHu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Ftp$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Ftp$2.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Ftp.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FuFoxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FullShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/FurkNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GettyFileRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GigaFoundationDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GigaPetaCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GigaSizeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GigaUpFr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GirlShareRo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GoEarCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GoldFileEu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GoodNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GoogleBooks.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GoogleGroups.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GotUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/GrooveShark.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HardSexTubeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HardwareClipsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HatLimitCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HellShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HideMyAssCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HitFileNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Home4FileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HostHackerboxOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HostPlikCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HostUjeNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HosterTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HostingcupCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HotFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HotShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HulkShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Hundred63PanCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/HyperFileShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/IFileIt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/IFilezCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/IcyFilesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/IfolderRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ImageFap.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ImageHavenNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ImageHostOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ImageNetzDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ImageVenueCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ImagesHackUs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ImzUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Indowebster.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/IskladkaCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/JamendoCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/JiffyUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/JizzHutCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/JumboFilesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/KeepFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/KeezMoviesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/KewlshareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/KickLoadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/KitaUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/L4dMapsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/L4dModsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LarasLevelBaseOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LastFm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LetitBitNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LetitFileRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LetitbitTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LikeFilesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LimeLinxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LinkFileDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LinkGe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LinkzHostCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LiveDriveCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LiveMixTapesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LizShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LoShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LoadFilesIn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LoadGatorCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LoadTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LoadedIt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/LooMboCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Mach2UploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MadShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MakNyosCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MammutMailCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MandamaisComBr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MangaTradersCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MangoShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MaxUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MediaValiseCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MediafireCom$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MediafireCom$2.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MediafireCom$3.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MediafireCom$PasswordSolver.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MediafireCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Mega1280Com.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaFileUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaFreeKz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaPornCom$STATUS.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaPornCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaRapidEu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaShareBy.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaShareVn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaUpWs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegaVideo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MegasharesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Megauploadcom$STATUS.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Megauploadcom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MekaShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MetaHyperCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MetacafeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MhfScriptBasic.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MidUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MilleDriveCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MinUs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MinoShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MintUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MissUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MlFat4ArabCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ModDbCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MoiDiskRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MojeVideoSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Moosharenet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MotherLessCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MountFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MovReelCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MovShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MovieShareIn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MuchShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MujSouborCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MultiShareCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MyDiskGe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MyStreamTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MyVideo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/MyuploadDK.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NahrajCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NakidoCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NarodRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NaviHostUs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NetDriveWs.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NetStorerCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NetUploadedCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Netloadin.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NextGenVidzCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NicoVideoJp.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NovaUpMovcom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/NukeShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OdsiebiePl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OmeGaveComVe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OneFichierCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OneMbUpCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OneTwoThreeUploadPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OnionShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OnlineDiskRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OpenFileRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OronCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/OtrDatenkellerAt.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Own3dTvTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Paid4ShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PandoraTV.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ParelliSavvyClubCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PartageFacileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PingHosterCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PliczekNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PlikosPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PlikusPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PlunderCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PornHostCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PornHubCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PrzeklejPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Przeslijnet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/PutShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Q4ShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/QJNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/QshareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/QuickLoadTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/QuickShareCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/QuickUploadDotNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/QuickyShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RGhostRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RTLnowDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RTMPDownload$1.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RTMPDownload.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RapidGatorNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RapidShareRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RapidSharkPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Rapidshare$RSLink.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Rapidshare.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RaviShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RayFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RedTubeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RemixShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ReverBnationComHoster.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RomHustlerNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RomsZopharNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/RuTubeRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SaveTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SavefileRo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ScribdCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SendFaileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SendFilePl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SendSpacePl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SendspaceCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Share50Com.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareBaseTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareBeastCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareBombCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareCx.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareFlareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareGadgetCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareHosterDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareHubCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareNownet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareOnlineBiz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareRapidCz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareSwiftCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareSystemsDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareUaCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareXXpgComBr.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareYourFileBiz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShareatorNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SharecashDotOrg2.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SharedZipCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Shareplacecom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SharingMatrixCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SharingOnlineCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SharovarCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShragleCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ShufuniCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SixGigaCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SixYbhUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SkipFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SkyGlobeRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SlingFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SlutLoadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SociFilesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SoftPediaCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SoundSnapCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SoundcloudCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SpankWireCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SpeedLoadTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SpeedShareOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SpeedoShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SpeedyShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Speedy_ShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SpiegelDe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/StageVuCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/StickAmCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/StileProjectCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/StooorageCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/StorageTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/StorePlaceOrg.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SupaShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SuperFastFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SuperMovCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SuperSharePl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/SwoopshareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TabNetUa.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TangleCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TenUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TeraDepotCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TeraFilesNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TgfServicesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ThreeHundredAndSixtyFiveFilesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TnaFlixCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ToucanSharingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TriLuLiLuRo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TuDouCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TuTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Tube8Com.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TubeLoadTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TumblrCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TunaBoxNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TuneScoopCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TurboBitNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TurboShareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TurboUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TvSmeSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TwisTysCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TwitVidCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TwoBackupNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TwoSharedCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/TyzdenSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/U115Com.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UFileNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UgotFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UkladajSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UlozTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UloziskoSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UltraShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UnLimitCoIl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UniBytesCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Up4Com.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Up4ShareVn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UpAvagaBy.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UpFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UpFullCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UpJejeGe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UpNitoSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UpShareMe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadBoxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadComUa.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadDriveCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadFloorCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadGe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadIlCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadKeepCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadMachineCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadMbCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadSpacePl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadStoreNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadStube.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadTc.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadUploaDownloadCoUk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadVilleCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Uploadedto$UploadedtoLinkObserver.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Uploadedto.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploaderPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadingItCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadyTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UploadzTk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UptalCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UsaUplNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UseUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Usershare.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UstreamTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/UzManTvCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VPornoTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VddlrCm.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VeohCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VerZendBe.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VideoBbCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VideoGoogle.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VideoWeedCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VideoalbumyAzetSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VideolecturesNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VideosSapo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VidsMySpaceCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ViiSk.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VimeoCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Vipfilecom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/VspaceCc.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WDivxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WatTv.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WebCamsCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WebShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WiseVidCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WorldStarHipHopCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WrzucTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WrzucajCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WrzutaPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WyslijPlikPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/WyslijToPl.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XFileSharingCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XFileSharingProBasic.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XFilesKz.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XHamsterCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XSevenTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XStreamTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XTubeCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XboxIsoZoneCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XnXxCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XsharewareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Xun6Com.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XupIn.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/XvideosCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YabaDabaRu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YouJizzCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YouPornCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YouSendItCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YouShareEu.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YourFileHostCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YourFileSendercom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YourFilesTo.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Youtube.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YunFileCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/YuvutuCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ZShareNet.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ZetshareCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ZidduCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/Zippysharecom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster/ZomgUploadCom.class
+X%%JAVASHAREDIR%%/JDownloader/jd/router/alcatel.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/router/arcor.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/router/clrList.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/router/lhdb.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/router/netgear.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/router/router.extract
+X%%JAVASHAREDIR%%/JDownloader/jd/router/routerdata.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/router/tilgin.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/router/tomato.xml
+X%%JAVASHAREDIR%%/JDownloader/jd/themes/default.icl
+X%%JAVASHAREDIR%%/JDownloader/jdupdate.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/BrowserLauncher2.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/Filters.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/JAntiCaptcha.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/JDGUI.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/JDHttp.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/JDUtils.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/JUnique.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/balloontip.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/clink170.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/cobra.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/hsqldb.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/htmlcleaner2_0.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/irclib.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/jna.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/js.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/substance-swingx.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/substance.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/synthetica.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/synthetica.license
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaBatik.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaBlackEye.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaBlackMoon.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaBlackStar.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaBlueIce.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaBlueMoon.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaBlueSteel.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaGreenDream.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaMauveMetallic.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaOrangeMetallic.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaSilverMoon.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaSimple2D.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaSkyMetallic.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/laf/syntheticaWhiteVision.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/miglayout.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/savemytube.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/servlet-api-2.5-6.1.8.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/svnkit.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/swingworker.jar
+X%%JAVASHAREDIR%%/JDownloader/libs/swingx.jar
+X%%JAVASHAREDIR%%/JDownloader/license.txt
+X%%JAVASHAREDIR%%/JDownloader/license_german.txt
+X%%JAVASHAREDIR%%/JDownloader/licenses/Apache License.txt
+X%%JAVASHAREDIR%%/JDownloader/licenses/Base64.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/Eclipse Public License.txt
+X%%JAVASHAREDIR%%/JDownloader/licenses/JSynthLaf.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/LGPL.txt
+X%%JAVASHAREDIR%%/JDownloader/licenses/Lafaello.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/Looks.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/Quaqua.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/Substance.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/XUI.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/apache2.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/batik.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/browserlauncher2.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/clink.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/cobra.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/filters.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/hqsql.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/htmlcleaner.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/irclib.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/jdownloader.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/jtattoo.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/licenses.extract
+X%%JAVASHAREDIR%%/JDownloader/licenses/miglayout.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/rhino_js.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/savemytube.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/swingworker.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/swingx.license
+X%%JAVASHAREDIR%%/JDownloader/licenses/synthetica.license
+X%%JAVASHAREDIR%%/JDownloader/outdated.dat
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDChat.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDExternInterface.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDFolderWatch.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDGrowl.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDHJMerge.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDHTTPLiveHeaderScripter.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDInfoFileWriter.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDLangFileEditor.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDPackageCustomizer.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDRemoteControl.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDShutdown.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDTray.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDUnrar.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/JDWebinterface.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/jdchat/styles.css
+X%%JAVASHAREDIR%%/JDownloader/plugins/jdchat/userliststyles.css
+X%%JAVASHAREDIR%%/JDownloader/plugins/jdshutdown/windows/cygwin1.dll
+X%%JAVASHAREDIR%%/JDownloader/plugins/schedule.jar
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/all_info.tmpl
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/bye.tmpl
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/favicon.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/filelist.js
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/add.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/jd_logo.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/minus.gif
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/page.gif
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/plus.gif
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/progress.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/reboot.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/reconnect.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/reconnect_do.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/reconnectchecked.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/refresh.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/save.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/shutdown.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/start.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img/stop.png
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/index.tmpl
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/jd.css
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/jdwebinterface
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/link_adder.tmpl
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/nojs.tmpl
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/passwd.tmpl
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/reconnect.tmpl
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/restart.tmpl
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/scripts.js
+X%%JAVASHAREDIR%%/JDownloader/plugins/webinterface/single_info.tmpl
+X%%JAVASHAREDIR%%/JDownloader/tools/flashgot.version
+X%%JAVASHAREDIR%%/JDownloader/tools/flashgot.xpi
+X%%JAVASHAREDIR%%/JDownloader/tools/tinyupdate.jar
+X%%JAVASHAREDIR%%/JDownloader/version.txt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/java
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bdng
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bgpld
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bmbmp3cm
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/bstmvss
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cbrsharsk
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cllctrnt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cms
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnnt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cnt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptlnk
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptm2
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/crptng
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/cryptt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/czshr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dckld
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/dskcz
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/easycaptcha
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/eshr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fl
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flbs
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/fldrr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flrck
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flshren
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flsrf
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/flst
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggp
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggpt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ggsz
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gshre
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/gtpp
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/hstjnt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkbs2
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrpt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkcrptwsCircles
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnkfl
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lnksvn
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lphlnk
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lttbt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/lxn
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mg1280
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgpld
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshre
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mgshrs2
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mshr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/mvwrldnt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nrdr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ntldn
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/nzllnkssrnjnksrg
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/o4fc
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldbx
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/pldcm
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ppscnrg
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctmylnkscm
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt/images
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/prtctt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rbkprrws
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlcrpt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sld
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rlshld
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rmfrksnt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdgcm
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdlbrr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rpdshr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/rslr
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scmn
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/scrd
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/strmprtct
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/sxvdt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/trbbt
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/ugtf
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/vdsz
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/wrldd
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods/zdd
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha/methods
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/captcha
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/dynamics
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/img/default/cursor
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/img/default/mime
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/img/default
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/img/hosterlogos
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/img/logo
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/img
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/languages
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/osx
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/plugins/decrypter
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/plugins/hoster
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/plugins
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/router
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd/themes
+X@dirrm %%JAVASHAREDIR%%/JDownloader/jd
+X@dirrm %%JAVASHAREDIR%%/JDownloader/libs/laf
+X@dirrm %%JAVASHAREDIR%%/JDownloader/libs
+X@dirrm %%JAVASHAREDIR%%/JDownloader/licenses
+X@dirrm %%JAVASHAREDIR%%/JDownloader/plugins/jdchat
+X@dirrm %%JAVASHAREDIR%%/JDownloader/plugins/jdshutdown/windows
+X@dirrm %%JAVASHAREDIR%%/JDownloader/plugins/jdshutdown
+X@dirrm %%JAVASHAREDIR%%/JDownloader/plugins/webinterface/img
+X@dirrm %%JAVASHAREDIR%%/JDownloader/plugins/webinterface
+X@dirrm %%JAVASHAREDIR%%/JDownloader/plugins
+X@dirrm %%JAVASHAREDIR%%/JDownloader/tools
+X@dirrm %%JAVASHAREDIR%%/JDownloader/tmp
+X@dirrm %%JAVASHAREDIR%%/JDownloader
+283f8e3d6b7181d959061910ea8641b2
+exit
+
