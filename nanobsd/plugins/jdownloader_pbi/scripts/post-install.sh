@@ -15,7 +15,7 @@ mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www
 pw useradd www -g www -G wheel -s /bin/sh -d /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home -w none
 
-mkdir -p www:www /usr/pbi/jdownloader-`uname -m`/downloads
+mkdir -p /usr/pbi/jdownloader-`uname -m`/downloads
 chown www:www /usr/pbi/jdownloader-`uname -m`/downloads
 chmod 775 /usr/pbi/jdownloader-`uname -m`/downloads
 
