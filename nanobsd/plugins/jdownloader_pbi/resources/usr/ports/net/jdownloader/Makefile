@@ -21,7 +21,7 @@ NO_BUILD=		yes
 USE_JAVA=		yes
 JAVA_VENDOR=		openjdk
 USE_ZIP=		yes
-JAVA_VERSION=		1.7+
+JAVA_VERSION=		1.6+
 JAVA_RUN=		yes
 
 OPTIONS=		XVFB "Enable Virtual X Display for JDownloader"	On
