@@ -2,13 +2,17 @@
 #
 # $FreeBSD$
 
+# Use 1 of these 2 lines if you're using Xvfb with x11vnc
+# export DISPLAY=:1
+# setenv DISPLAY=:1
+#
+# Use 1 of these 2 line if you're using an X11 server on another system.
 # Change IP address in line below to the IP address of your X11 Server/Display
-# and remove the # at the beginning of the line
-# export DISPLAY=192.168.1.1:0.0
+# export DISPLAY=192.168.2.1:0.0
+# setenv DISPLAY 192.168.2.1:0.0
 #
 # Uncomment the next 3 lines if you want to use Xvfb as your virtual X display
 # Xvfb :1 -screen 0 1024x768x16
-# export DISPLAY=:1
 # exec x11vnc -usepw -nevershared -forever -display :1
 
 exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar >> /var/log/JDownloader/JDownloader.log 2>&1 &
