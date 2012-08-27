@@ -19,6 +19,10 @@ mkdir -p /usr/pbi/jdownloader-`uname -m`/downloads
 chown www:www /usr/pbi/jdownloader-`uname -m`/downloads
 chmod 775 /usr/pbi/jdownloader-`uname -m`/downloads
 
+mkdir -p /var/run/JDownloader /var/log/JDownloader
+touch /var/run/JDownloader/JDownloader.pid /var/log/JDownloader/JDownloader.log
+chown -R www:www /var/run/JDownloader /var/log/JDownloader
+
 ln -sf /usr/pbi/${JDOWNLOADER_HOME}/openjdk7/jre/lib/amd64/xawt/libmawt.so /usr/local/lib/
 find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXrender.*" -exec ln -sf {} /usr/local/lib/ \;
 find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libmawt.*" -exec ln -sf {} /usr/local/lib/ \;
