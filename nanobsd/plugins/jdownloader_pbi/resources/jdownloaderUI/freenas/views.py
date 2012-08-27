@@ -323,7 +323,7 @@ def status(request):
     """
     pid = None
 
-    proc = Popen(["/usr/bin/pgrep", "-U", "www", "-F", "/var/run/jdownloader.pid"], stdout=PIPE, stderr=PIPE)
+    proc = Popen(["/usr/bin/pgrep", "-U", "www", "-F", "/var/run/JDownloader/JDownloader.pid"], stdout=PIPE, stderr=PIPE)
 
     stdout = proc.communicate()[0]
 
