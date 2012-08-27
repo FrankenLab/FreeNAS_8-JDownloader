@@ -13,11 +13,17 @@ sed -i '' -e "s,exec java,exec ${JDOWNLOADER_HOME}/bin/java,g" ${JDOWNLOADER_HOM
 
 mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www
-pw useradd www -g www -G wheel -s /usr/local/bin/bash -d /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home -w none
+pw useradd www -g www -G wheel -s /bin/sh -d /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home -w none
 
 mkdir -p www:www /usr/pbi/jdownloader-`uname -m`/downloads
 chown www:www /usr/pbi/jdownloader-`uname -m`/downloads
 chmod 775 /usr/pbi/jdownloader-`uname -m`/downloads
+
+ln -sf /usr/pbi/${JDOWNLOADER_HOME}/openjdk7/jre/lib/amd64/xawt/libmawt.so /usr/local/lib/
+find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXrender.*" -exec ln -sf {} /usr/local/lib/ \;
+find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libmawt.*" -exec ln -sf {} /usr/local/lib/ \;
+find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXtst.*" -exec ln -sf {} /usr/local/lib/ \;
+find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXi.*" -exec ln -sf {} /usr/local/lib/ \;
 
 # Remove the port tree
 #rm -rf /usr/pbi/jdownloader-`uname -m`/usr
