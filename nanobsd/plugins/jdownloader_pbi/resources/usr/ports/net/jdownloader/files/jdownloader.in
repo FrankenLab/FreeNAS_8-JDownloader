@@ -12,7 +12,6 @@
 # setenv DISPLAY 192.168.2.1:0.0
 #
 # Uncomment the next 3 lines if you want to use Xvfb as your virtual X display
-# If running Xvfb in a jail, may need -noshmem after Xvfb
 # Xvfb :1 -screen 0 1024x768x16
 # exec x11vnc -usepw -nevershared -forever -display :1
 
