@@ -6,7 +6,7 @@ If you prefer to run JDownloader "Headless", Xvfb has been included as
 an option so you can then use VNC to attach and control a virtual
 X Display, Xvfb and view JDownloader. The disadvantage to this method
 is that JDownloader will not be able to detect selected links from
-the client and also may possibly crash if a catcha prompt pops up. The 
+the client and also may possibly crash if a captcha prompt pops up. The 
 advantage is you can disconnect and let it run in the background. Run
 "make config" and check Xvfb to enable this option. Enabing this option
 also will install x11vnc which will be required for this.
@@ -37,6 +37,8 @@ If you run into difficulties building with this option, try the following:
 3) cd /usr/local/ports/textproc/p5-XML-Parser and make reinstall
 
 portupgrade and portmaster can be found in /usr/ports/ports-mgmt
+
+You can also run JDownloader as a service %%PREFIX%%/etc/rc.d/jdownloaderd
 
 JDownloader also has several different web interface plugins you can enable
 from the GUI which allow you to control and add downloads.
