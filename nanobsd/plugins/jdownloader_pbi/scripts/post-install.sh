@@ -23,7 +23,8 @@ mkdir -p /var/run/JDownloader /var/log/JDownloader
 touch /var/run/JDownloader/JDownloader.pid /var/log/JDownloader/JDownloader.log
 chown -R www:www /var/run/JDownloader /var/log/JDownloader
 
-ln -sf /usr/pbi/${JDOWNLOADER_HOME}/openjdk7/jre/lib/amd64/xawt/libmawt.so /usr/local/lib/
+ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib/
+ln -sf /usr/pbi/${JDOWNLOADER_HOME}/openjdk6/jre/lib/amd64/xawt/libmawt.so /usr/local/lib/
 find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXrender.*" -exec ln -sf {} /usr/local/lib/ \;
 find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libmawt.*" -exec ln -sf {} /usr/local/lib/ \;
 find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXtst.*" -exec ln -sf {} /usr/local/lib/ \;
