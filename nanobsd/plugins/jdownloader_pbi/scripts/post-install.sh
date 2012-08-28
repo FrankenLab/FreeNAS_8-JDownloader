@@ -11,6 +11,13 @@ echo libz.so.4 libz.so.5 > /usr/pbi/jdownloader-`uname -m`/etc/libmap.conf
 
 sed -i '' -e "s,exec java,exec ${JDOWNLOADER_HOME}/bin/java,g" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
+mkdir -p /usr/local/lib/X11/fonts
+(cd /usr/local/lib/X11/fonts ; tar xf ${JDOWNLOADER_HOME}/fonts.tar)
+rm ${JDOWNLOADER_HOME}/fonts.tar
+#tar xf fonts.tar /usr/local/lib/fonts/
+
+# setenv FontPath "/usr/local/lib/X11/fonts/" (Add to sbin/jdownloader with sed)
+
 mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www
 pw useradd www -g www -G wheel -s /bin/sh -d /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home -w none
