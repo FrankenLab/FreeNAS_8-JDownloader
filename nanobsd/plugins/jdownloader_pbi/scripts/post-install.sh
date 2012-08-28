@@ -20,6 +20,9 @@ rm ${JDOWNLOADER_HOME}/fonts.tar
 sed -i '' -e "12a\\
 setenv FontPath \"/usr/local/lib/X11/fonts/\"" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
+sed -i '' -e "13a\\
+ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib/" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
 mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www
 pw useradd www -g www -G wheel -s /bin/sh -d /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home -w none
