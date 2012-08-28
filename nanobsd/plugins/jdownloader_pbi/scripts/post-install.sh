@@ -17,6 +17,8 @@ rm ${JDOWNLOADER_HOME}/fonts.tar
 #tar xf fonts.tar /usr/local/lib/fonts/
 
 # setenv FontPath "/usr/local/lib/X11/fonts/" (Add to sbin/jdownloader with sed)
+sed -i '' -e "12a\\
+setenv FontPath \"/usr/local/lib/X11/fonts/\"" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www
@@ -30,15 +32,18 @@ mkdir -p /var/run/JDownloader /var/log/JDownloader
 touch /var/run/JDownloader/JDownloader.pid /var/log/JDownloader/JDownloader.log
 chown -R www:www /var/run/JDownloader /var/log/JDownloader
 
+ln -sf /usr/pbi/${JDOWNLOADER_HOME}/bin/unrar /usr/local/bin/unrar
+
 ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib/
-ln -sf /usr/pbi/${JDOWNLOADER_HOME}/openjdk6/jre/lib/amd64/xawt/libmawt.so /usr/local/lib/
-find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXrender.*" -exec ln -sf {} /usr/local/lib/ \;
-find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libmawt.*" -exec ln -sf {} /usr/local/lib/ \;
-find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXtst.*" -exec ln -sf {} /usr/local/lib/ \;
-find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXi.*" -exec ln -sf {} /usr/local/lib/ \;
+
+#ln -sf /usr/pbi/${JDOWNLOADER_HOME}/openjdk6/jre/lib/amd64/xawt/libmawt.so /usr/local/lib/
+#find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXrender.*" -exec ln -sf {} /usr/local/lib/ \;
+#find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libmawt.*" -exec ln -sf {} /usr/local/lib/ \;
+#find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXtst.*" -exec ln -sf {} /usr/local/lib/ \;
+#find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXi.*" -exec ln -sf {} /usr/local/lib/ \;
 
 # Remove the port tree
-#rm -rf /usr/pbi/jdownloader-`uname -m`/usr
+rm -rf /usr/pbi/jdownloader-`uname -m`/usr
 #/usr/pbi/jdownloader-amd64/usr/ports/net/jdownloader
 
 echo $JAIL_IP"	"`hostname` >> /etc/hosts
