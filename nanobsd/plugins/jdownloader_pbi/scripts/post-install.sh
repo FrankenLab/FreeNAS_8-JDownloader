@@ -37,7 +37,7 @@ chown -R www:www /var/run/JDownloader /var/log/JDownloader
 
 ln -sf /usr/pbi/${JDOWNLOADER_HOME}/bin/unrar /usr/local/bin/unrar
 
-ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib/
+ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib
 
 #ln -sf /usr/pbi/${JDOWNLOADER_HOME}/openjdk6/jre/lib/amd64/xawt/libmawt.so /usr/local/lib/
 #find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXrender.*" -exec ln -sf {} /usr/local/lib/ \;
