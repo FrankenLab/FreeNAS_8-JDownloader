@@ -22,7 +22,7 @@ command=%%PREFIX%%/sbin/jdownloader
 
 load_rc_config $name
 
-jdownloader_user=${jdownloader_user-"www"}
+jdownloader_user=${jdownloader_user="www"}
 
 command_args="$jdownloader_args"
 
