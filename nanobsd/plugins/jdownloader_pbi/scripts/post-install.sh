@@ -52,7 +52,19 @@ ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib
 rm -rf /usr/pbi/jdownloader-`uname -m`/usr
 #/usr/pbi/jdownloader-amd64/usr/ports/net/jdownloader
 
-echo $JAIL_IP"	"`hostname` >> /etc/hosts
+# Need to test PIDfile because if user quits from X11 session FreeNAS GUI doesn't know
+# Test if PIDfile exists, add to sbin/jdownloader
+#if [ -e /var/run/JDownloader/JDownloader.pid ]; then
+#	id=`cat /var/run/JDownloader/JDownloader.pid`
+#	if ps -p $id > /dev/null
+#		then
+#		: active
+#	else
+#		: inactive
+#	fi
+#fi
+
+#echo $JAIL_IP"	"`hostname` >> /etc/hosts
 
 echo 'jdownloader_flags=""' > /usr/pbi/jdownloader-`uname -m`/etc/rc.conf
 echo 'jdownloader_flags=""' > /etc/rc.conf
