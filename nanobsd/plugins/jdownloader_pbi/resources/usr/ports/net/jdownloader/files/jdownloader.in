@@ -4,7 +4,7 @@
 
 # Use 1 of these 2 lines if you're using Xvfb with x11vnc
 # export DISPLAY=:1
-# setenv DISPLAY=:1
+# setenv DISPLAY :1
 #
 # Use 1 of these 2 line if you're using an X11 server on another system.
 # Change IP address in line below to the IP address of your X11 Server/Display
