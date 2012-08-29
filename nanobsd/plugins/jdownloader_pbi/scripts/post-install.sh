@@ -23,6 +23,9 @@ setenv FontPath \"/usr/local/lib/X11/fonts/\"" ${JDOWNLOADER_HOME}/sbin/jdownloa
 sed -i '' -e "13a\\
 ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
+# Need to put/replace this in /usr/local/etc/rc.d/jdownloaderd
+# command=env DISPLAY=192.168.2.1:0.0 FontPath="/usr/local/lib/X11/fonts/" /usr/pbi/jdownloader-amd64/sbin/jdownloader
+
 mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
 pw groupadd www
 pw useradd www -g www -G wheel -s /bin/sh -d /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home -w none
