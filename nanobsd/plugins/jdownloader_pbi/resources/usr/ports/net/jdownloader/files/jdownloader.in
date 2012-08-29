@@ -2,6 +2,7 @@
 #
 # $FreeBSD$
 
+LOGFILE="/var/log/JDownloader/JDownloader.log"
 # Use 1 of these 2 lines if you're using Xvfb with x11vnc
 # export DISPLAY=:1
 # setenv DISPLAY :1
@@ -15,4 +16,4 @@
 # Xvfb :1 -screen 0 1024x768x16
 # exec x11vnc -noshm -usepw -nevershared -forever -display :1
 
-exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar >> /var/log/JDownloader/JDownloader.log 2>&1 &
+exec java -Xmx512m -jar %%JAVASHAREDIR%%/JDownloader/JDownloader.jar >> $LOGFILE 2>&1 &
