@@ -27,14 +27,48 @@ sed -i '' -e "12a\\
 setenv FontPath \"/usr/local/lib/X11/fonts/\"" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "13a\\
-ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
+ldconfig -m ${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 # Need to put/replace this in /usr/local/etc/rc.d/jdownloaderd
-sed -i '' -e "s,command=,command=env DISPLAY=192.168.2.1:0.0 FontPath=\"/usr/local/lib/X11/fonts/\" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+sed -i '' -e "s,command=,command=env DISPLAY=192.168.2.1:0.0 FontPath=/usr/local/lib/X11/fonts/ ," ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+
+# Changed script user from www to jdown
 sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 
 # Need to test PIDfile because if user quits from X11 session FreeNAS GUI doesn't know
 # Test if PIDfile exists, add to sbin/jdownloader, need to see if FreeNAS GUI can be refreshed
+
+sed -i '' -e "3a\\
+^M" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "4a\\
+if [ -f /var/run/JDownloader/JDownloader.pid ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "5a\\ 
+\ \ \ \ id=\`cat /var/run/JDownloader/JDownloader.pid\`" ${JDOWNLOADER_HOME}/sbin/jdownloader   
+
+sed -i '' -e "6a\\
+\ \ \ \ if ps -p \${id} > /dev/null" ${JDOWNLOADER_HOME}/sbin/jdownloader                     
+
+sed -i '' -e "7a\\
+\ \ \ \ \ \ \ \ then" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "8a\\
+\ \ \ \ \ \ \ \ echo \"Another copy of JDownloader appears to be running already."\" ${JDOWNLOADER_HOME}/sbin/jdownloader
+sed -i '' -e "9a\\
+\ \ \ \ \ \ \ \ (exit)" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "10a\\
+\ \ \ \ else" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "11a\\
+\ \ \ \ \ \ \ \ rm /var/run/JDownloader/JDownloader.pid" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "12a\\
+\ \ \ \ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "13a\\
+fi" ${JDOWNLOADER_HOME}/sbin/jdownloader 
 
 #if [ -f /var/run/JDownloader/JDownloader.pid ]; then
 #    id=`cat /var/run/JDownloader/JDownloader.pid`
@@ -45,6 +79,7 @@ sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 #        (exit)
 #    else
 #        rm /var/run/JDownloader/JDownloader.pid
+#	 Make sure FreeNAS GUI is OFF
 #    fi
 #fi
 
@@ -71,6 +106,7 @@ chown -R jdown:jdown /var/run/JDownloader /var/log/JDownloader
 ##########################
 
 ln -sf ${JDOWNLOADER_HOME}/bin/unrar /usr/local/bin/unrar
+ln -sf ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd /usr/local/etc/rc.d/jdownloaderd
 
 ldconfig -m ${JDOWNLOADER_HOME}/lib
 
