@@ -36,15 +36,22 @@ sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 # Need to test PIDfile because if user quits from X11 session FreeNAS GUI doesn't know
 # Test if PIDfile exists, add to sbin/jdownloader, need to see if FreeNAS GUI can be refreshed
 
-#if [ -e /var/run/JDownloader/JDownloader.pid ]; then
-#	id=`cat /var/run/JDownloader/JDownloader.pid`
-#	if ps -p $id > /dev/null
-#		then
-#		: active
-#	else
-#		: inactive
-#	fi
+#if [ -f /var/run/JDownloader/JDownloader.pid ]; then
+#    id=`cat /var/run/JDownloader/JDownloader.pid`
+#
+#    if ps -p $id > /dev/null
+#    then 
+#        echo "Another copy of JDownloader appears to be running already."
+#        (exit)
+#    else
+#        rm /var/run/JDownloader/JDownloader.pid
+#    fi
 #fi
+
+# Creat PID in sbin/jdownloader
+
+echo "sleep 2" >> ${JDOWNLOADER_HOME}/sbin/jdownloader
+echo "pgrep -U jdown -f JDownloader.jar > /var/run/JDownloader/JDownloader.pid" >> ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 
 mkdir -p ${JDOWNLOADER_HOME}/etc/jdownloader/home
