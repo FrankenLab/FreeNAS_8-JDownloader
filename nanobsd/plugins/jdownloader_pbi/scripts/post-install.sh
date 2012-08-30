@@ -3,18 +3,24 @@
 JDOWNLOADER_HOME=/usr/pbi/jdownloader-`uname -m`
 
 echo libz.so.4 libz.so.5 > /etc/libmap.conf
-echo libz.so.4 libz.so.5 > /usr/pbi/jdownloader-`uname -m`/etc/libmap.conf
+echo libz.so.4 libz.so.5 > ${JDOWNLOADER_HOME}/etc/libmap.conf
 
-#cp -a /usr/local/sbin/jdownloader /usr/pbi/jdownloader-`uname -m`/sbin/jdownloader
-#chown www:www /usr/pbi/jdownloader-`uname -m`/sbin/jdownloader
-#chown -R www:www /usr/pbi/jdownloader-`uname -m`/
-
-sed -i '' -e "s,exec java,exec ${JDOWNLOADER_HOME}/bin/java,g" ${JDOWNLOADER_HOME}/sbin/jdownloader
+##########################
+# INSTALL FONTS FOR X11
+##########################
 
 mkdir -p /usr/local/lib/X11/fonts
-(cd /usr/local/lib/X11/fonts ; tar xf ${JDOWNLOADER_HOME}/fonts.tar)
-rm ${JDOWNLOADER_HOME}/fonts.tar
-#tar xf fonts.tar /usr/local/lib/fonts/
+(cd /usr/local/lib/X11/fonts ; cp -a ${JDOWNLOADER_HOME}/fonts/* .)
+rm -rf ${JDOWNLOADER_HOME}/fonts
+
+#(cd /usr/local/lib/X11/fonts ; tar xf ${JDOWNLOADER_HOME}/fonts.tar)
+#rm ${JDOWNLOADER_HOME}/fonts.tar
+
+##########################
+# SED Stuff
+##########################
+
+sed -i '' -e "s,exec java,exec ${JDOWNLOADER_HOME}/bin/java,g" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 # setenv FontPath "/usr/local/lib/X11/fonts/" (Add to sbin/jdownloader with sed)
 sed -i '' -e "12a\\
@@ -24,19 +30,38 @@ sed -i '' -e "13a\\
 ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 # Need to put/replace this in /usr/local/etc/rc.d/jdownloaderd
-# command=env DISPLAY=192.168.2.1:0.0 FontPath="/usr/local/lib/X11/fonts/" /usr/pbi/jdownloader-amd64/sbin/jdownloader
+sed -i '' -e "s,command=,command=env DISPLAY=192.168.2.1:0.0 FontPath=\"/usr/local/lib/X11/fonts/\" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 
-mkdir -p /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home
-pw groupadd www
-pw useradd www -g www -G wheel -s /bin/sh -d /usr/pbi/jdownloader-`uname -m`/etc/jdownloader/home -w none
+# Need to test PIDfile because if user quits from X11 session FreeNAS GUI doesn't know
+# Test if PIDfile exists, add to sbin/jdownloader, need to see if FreeNAS GUI can be refreshed
 
-mkdir -p /usr/pbi/jdownloader-`uname -m`/downloads
-chown www:www /usr/pbi/jdownloader-`uname -m`/downloads
-chmod 775 /usr/pbi/jdownloader-`uname -m`/downloads
+#if [ -e /var/run/JDownloader/JDownloader.pid ]; then
+#	id=`cat /var/run/JDownloader/JDownloader.pid`
+#	if ps -p $id > /dev/null
+#		then
+#		: active
+#	else
+#		: inactive
+#	fi
+#fi
+
+
+mkdir -p ${JDOWNLOADER_HOME}/etc/jdownloader/home
+pw groupadd jdown
+pw useradd jdown -g jdown -G wheel -s /bin/sh -d ${JDOWNLOADER_HOME}/etc/jdownloader/home -w none
+
+mkdir -p ${JDOWNLOADER_HOME}/downloads
+chown jdown:jdown ${JDOWNLOADER_HOME}/downloads
+chmod 775 ${JDOWNLOADER_HOME}/downloads
 
 mkdir -p /var/run/JDownloader /var/log/JDownloader
 touch /var/run/JDownloader/JDownloader.pid /var/log/JDownloader/JDownloader.log
-chown -R www:www /var/run/JDownloader /var/log/JDownloader
+chown -R jdown:jdown /var/run/JDownloader /var/log/JDownloader
+
+##########################
+# LINKS
+##########################
 
 ln -sf /usr/pbi/${JDOWNLOADER_HOME}/bin/unrar /usr/local/bin/unrar
 
@@ -48,25 +73,18 @@ ldconfig -m /usr/pbi/${JDOWNLOADER_HOME}/lib
 #find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXtst.*" -exec ln -sf {} /usr/local/lib/ \;
 #find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXi.*" -exec ln -sf {} /usr/local/lib/ \;
 
+##########################
+# CLEANUP
+##########################
+
 # Remove the port tree
-rm -rf /usr/pbi/jdownloader-`uname -m`/usr
+rm -rf ${JDOWNLOADER_HOME}/usr
 #/usr/pbi/jdownloader-amd64/usr/ports/net/jdownloader
 
-# Need to test PIDfile because if user quits from X11 session FreeNAS GUI doesn't know
-# Test if PIDfile exists, add to sbin/jdownloader
-#if [ -e /var/run/JDownloader/JDownloader.pid ]; then
-#	id=`cat /var/run/JDownloader/JDownloader.pid`
-#	if ps -p $id > /dev/null
-#		then
-#		: active
-#	else
-#		: inactive
-#	fi
-#fi
 
 #echo $JAIL_IP"	"`hostname` >> /etc/hosts
 
-echo 'jdownloader_flags=""' > /usr/pbi/jdownloader-`uname -m`/etc/rc.conf
+echo 'jdownloader_flags=""' > ${JDOWNLOADER_HOME}/etc/rc.conf
 echo 'jdownloader_flags=""' > /etc/rc.conf
 
-/usr/pbi/jdownloader-`uname -m`/bin/python /usr/pbi/jdownloader-`uname -m`/jdownloaderUI/manage.py syncdb --migrate --noinput
+${JDOWNLOADER_HOME}/bin/python ${JDOWNLOADER_HOME}/jdownloaderUI/manage.py syncdb --migrate --noinput
