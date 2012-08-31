@@ -19,7 +19,7 @@ RUN_DEPENDS=	unzip:${PORTSDIR}/archivers/unzip unrar:${PORTSDIR}/archivers/unrar
 
 NO_BUILD=		yes
 USE_JAVA=		yes
-JAVA_VENDOR=		openjdk
+#JAVA_VENDOR=		openjdk
 USE_ZIP=		yes
 JAVA_VERSION=		1.6+
 JAVA_RUN=		yes
