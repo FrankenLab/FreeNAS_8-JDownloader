@@ -106,6 +106,7 @@ echo "pgrep -U jdown -f JDownloader.jar > /var/run/JDownloader/JDownloader.pid" 
 mkdir -p ${JDOWNLOADER_HOME}/etc/jdownloader/home
 pw groupadd jdown
 pw useradd jdown -g jdown -G wheel -s /bin/sh -d ${JDOWNLOADER_HOME}/etc/jdownloader/home -w none
+chown -R jdown:jdown ${JDOWNLOADER_HOME}/etc/jdownloader
 
 mkdir -p ${JDOWNLOADER_HOME}/downloads
 chown jdown:jdown ${JDOWNLOADER_HOME}/downloads
