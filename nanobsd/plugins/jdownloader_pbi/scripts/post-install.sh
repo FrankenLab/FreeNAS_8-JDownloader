@@ -44,42 +44,56 @@ sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 sed -i '' -e "4a\\
 if [ -f /var/run/JDownloader/JDownloader.pid ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "5a\\ 
-\ \ \ \ id=\`cat /var/run/JDownloader/JDownloader.pid\`" ${JDOWNLOADER_HOME}/sbin/jdownloader   
+
+sed -i '' -e "5a\\
+\ \ \ \ if [ !\$id ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "6a\\
-\ \ \ \ if ps -p \${id} > /dev/null" ${JDOWNLOADER_HOME}/sbin/jdownloader                     
-
-sed -i '' -e "7a\\
-\ \ \ \ \ \ \ \ then" ${JDOWNLOADER_HOME}/sbin/jdownloader
-
-sed -i '' -e "8a\\
-\ \ \ \ \ \ \ \ echo \"Another copy of JDownloader appears to be running already."\" ${JDOWNLOADER_HOME}/sbin/jdownloader
-sed -i '' -e "9a\\
 \ \ \ \ \ \ \ \ (exit)" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "10a\\
-\ \ \ \ else" ${JDOWNLOADER_HOME}/sbin/jdownloader
-
-sed -i '' -e "11a\\
-\ \ \ \ \ \ \ \ rm /var/run/JDownloader/JDownloader.pid" ${JDOWNLOADER_HOME}/sbin/jdownloader
-
-sed -i '' -e "12a\\
+sed -i '' -e "7a\\
 \ \ \ \ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
+sed -i '' -e "8a\\ 
+\ \ \ \ id=\`cat /var/run/JDownloader/JDownloader.pid\`" ${JDOWNLOADER_HOME}/sbin/jdownloader   
+
+sed -i '' -e "9a\\
+\ \ \ \ echo \${id}" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "10a\\
+\ \ \ \ if ps -p \${id} > /dev/null" ${JDOWNLOADER_HOME}/sbin/jdownloader                     
+
+sed -i '' -e "11a\\
+\ \ \ \ \ \ \ \ then" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "128a\\
+\ \ \ \ \ \ \ \ echo \"Another copy of JDownloader appears to be running already."\" ${JDOWNLOADER_HOME}/sbin/jdownloader
 sed -i '' -e "13a\\
+\ \ \ \ \ \ \ \ (exit)" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "14a\\
+\ \ \ \ else" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "15a\\
+\ \ \ \ \ \ \ \ rm /var/run/JDownloader/JDownloader.pid" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "16a\\
+\ \ \ \ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "17a\\
 fi" ${JDOWNLOADER_HOME}/sbin/jdownloader 
 
 #if [ -f /var/run/JDownloader/JDownloader.pid ]; then
-#    id=`cat /var/run/JDownloader/JDownloader.pid`
-#
-#    if ps -p $id > /dev/null
-#    then 
-#        echo "Another copy of JDownloader appears to be running already."
+#    if [ !$id ]; then
 #        (exit)
-#    else
-#        rm /var/run/JDownloader/JDownloader.pid
-#	 Make sure FreeNAS GUI is OFF
+#    fi    
+#    echo ${id}    
+#    if ps -p ${id} > /dev/null    
+#        then    
+#            echo "Another copy of JDownloader appears to be running already."    
+#            (exit)    
+#        else
+#            rm /var/run/JDownloader/JDownloader.pid
 #    fi
 #fi
 
