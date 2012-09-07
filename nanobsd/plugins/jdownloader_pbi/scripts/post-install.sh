@@ -38,8 +38,8 @@ sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 # Need to test PIDfile because if user quits from X11 session FreeNAS GUI doesn't know
 # Test if PIDfile exists, add to sbin/jdownloader, need to see if FreeNAS GUI can be refreshed
 
-sed -i '' -e "3a\\
-^M" ${JDOWNLOADER_HOME}/sbin/jdownloader
+#sed -i '' -e "3a\\
+#^M" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "4a\\
 if [ -f /var/run/JDownloader/JDownloader.pid ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
