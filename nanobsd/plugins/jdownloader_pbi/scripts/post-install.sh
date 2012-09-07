@@ -97,6 +97,10 @@ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 #    fi
 #fi
 
+#exec /usr/pbi/jdownloader-amd64/bin/Xvfb :1 -screen 0 1024x768x16 &
+#exec /usr/pbi/jdownloader-amd64/bin/x11vnc -noshm -usepw -nevershared -forever -display :1 &
+#exec /usr/pbi/jdownloader-amd64/bin/fluxbox -d :1 &
+
 # Creat PID in sbin/jdownloader
 
 echo "sleep 2" >> ${JDOWNLOADER_HOME}/sbin/jdownloader
