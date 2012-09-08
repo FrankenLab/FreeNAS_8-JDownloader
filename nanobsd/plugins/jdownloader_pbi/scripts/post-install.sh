@@ -23,14 +23,14 @@ rm -rf ${JDOWNLOADER_HOME}/fonts
 sed -i '' -e "s,exec java,exec ${JDOWNLOADER_HOME}/bin/java,g" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 # setenv FontPath "/usr/local/lib/X11/fonts/" (Add to sbin/jdownloader with sed)
-sed -i '' -e "12a\\
-setenv FontPath \"/usr/local/lib/X11/fonts/\"" ${JDOWNLOADER_HOME}/sbin/jdownloader
+#sed -i '' -e "12a\\
+#setenv FontPath \"/usr/local/lib/X11/fonts/\"" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "13a\\
 ldconfig -m ${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 # Need to put/replace this in /usr/local/etc/rc.d/jdownloaderd
-sed -i '' -e "s,command=,command=env DISPLAY=192.168.2.1:0.0 FontPath=/usr/local/lib/X11/fonts/ ," ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+sed -i '' -e "s,command=,command=env DISPLAY=:1 ," ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 
 # Changed script user from www to jdown
 sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
@@ -41,46 +41,46 @@ sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 #sed -i '' -e "3a\\
 #^M" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "4a\\
+sed -i '' -e "5a\\
 if [ -f /var/run/JDownloader/JDownloader.pid ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-
-sed -i '' -e "5a\\
-\ \ \ \ if [ !\$id ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
-
 sed -i '' -e "6a\\
-\ \ \ \ \ \ \ \ (exit)" ${JDOWNLOADER_HOME}/sbin/jdownloader
+\ \ \ \ if [ -z \{$id} ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "7a\\
+\ \ \ \ \ \ \ \ exit" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "8a\\
 \ \ \ \ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "8a\\ 
+sed -i '' -e "9a\\ 
 \ \ \ \ id=\`cat /var/run/JDownloader/JDownloader.pid\`" ${JDOWNLOADER_HOME}/sbin/jdownloader   
 
-sed -i '' -e "9a\\
+sed -i '' -e "10a\\
 \ \ \ \ echo \${id}" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "10a\\
+sed -i '' -e "11a\\
 \ \ \ \ if ps -p \${id} > /dev/null" ${JDOWNLOADER_HOME}/sbin/jdownloader                     
 
-sed -i '' -e "11a\\
+sed -i '' -e "12a\\
 \ \ \ \ \ \ \ \ then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "128a\\
-\ \ \ \ \ \ \ \ echo \"Another copy of JDownloader appears to be running already."\" ${JDOWNLOADER_HOME}/sbin/jdownloader
 sed -i '' -e "13a\\
-\ \ \ \ \ \ \ \ (exit)" ${JDOWNLOADER_HOME}/sbin/jdownloader
+\ \ \ \ \ \ \ \ echo \"Another copy of JDownloader appears to be running already."\" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "14a\\
-\ \ \ \ else" ${JDOWNLOADER_HOME}/sbin/jdownloader
+\ \ \ \ \ \ \ \ exit" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "15a\\
-\ \ \ \ \ \ \ \ rm /var/run/JDownloader/JDownloader.pid" ${JDOWNLOADER_HOME}/sbin/jdownloader
+\ \ \ \ else" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "16a\\
-\ \ \ \ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
+\ \ \ \ \ \ \ \ rm /var/run/JDownloader/JDownloader.pid" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "17a\\
+\ \ \ \ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "18a\\
 fi" ${JDOWNLOADER_HOME}/sbin/jdownloader 
 
 #if [ -f /var/run/JDownloader/JDownloader.pid ]; then
@@ -97,9 +97,18 @@ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 #    fi
 #fi
 
-#exec /usr/pbi/jdownloader-amd64/bin/Xvfb :1 -screen 0 1024x768x16 &
-#exec /usr/pbi/jdownloader-amd64/bin/x11vnc -noshm -usepw -nevershared -forever -display :1 &
-#exec /usr/pbi/jdownloader-amd64/bin/fluxbox -d :1 &
+#if [ -z `pgrep Xvfb` ]; then
+#    exec /usr/pbi/jdownloader-amd64/bin/Xvfb :1 -screen 0 1024x768x16 &
+#    echo "Xvfb not running?"
+#fi
+#if [ -z `pgrep x11vnc` ]; then
+#    echo "x11vnc not running?"
+#    exec /usr/pbi/jdownloader-amd64/bin/x11vnc -noshm -nevershared -forever -display :1 &
+#fi
+#if [ -z `pgrep fluxbox` ]; then
+#    exec /usr/pbi/jdownloader-amd64/bin/fluxbox -d :1 &
+#    echo "fluxbox not running?"
+#fi
 
 # Creat PID in sbin/jdownloader
 
