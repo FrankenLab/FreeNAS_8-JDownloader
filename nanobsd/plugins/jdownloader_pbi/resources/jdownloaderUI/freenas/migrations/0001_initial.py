@@ -12,7 +12,7 @@ class Migration(SchemaMigration):
         db.create_table('freenas_jdownloader', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('enable', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('servername', self.gf('django.db.models.fields.CharField')(default=':1', max_length=500, blank=False)),
+            ('x11_DISPLAY', self.gf('django.db.models.fields.CharField')(default=':1', max_length=500, blank=False)),
             ('xvfb_enable', self.gf('django.db.models.fields.BooleanField')(default=True)),
         ))
         db.send_create_signal('freenas', ['JDownloader'])
@@ -37,7 +37,7 @@ class Migration(SchemaMigration):
             'xvfb_enable': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'enable': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'servername': ('django.db.models.fields.CharField', [], {'default': "':1'", 'max_length': '500', 'blank': 'True'})
+            'x11_DISPLAY': ('django.db.models.fields.CharField', [], {'default': "':1'", 'max_length': '500', 'blank': 'True'})
         }
     }
 

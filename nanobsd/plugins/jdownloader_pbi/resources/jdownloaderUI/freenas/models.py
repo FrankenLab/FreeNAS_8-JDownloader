@@ -7,5 +7,5 @@ class JDownloader(models.Model):
     """
 
     enable = models.BooleanField(default=False)
-    servername = models.CharField(max_length=500, default=':1', blank=True)
+    x11_DISPLAY = models.CharField(max_length=500, default=':1', blank=True)
     xvfb_enable = models.BooleanField(default=True)
