@@ -27,7 +27,7 @@ rm -rf ${JDOWNLOADER_HOME}/fonts
 # Changed script user from www to jdown
 sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 
-sed -i '' -e "s,-U www,-U root,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+sed -i '' -e "s,-U jdown,-U root,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 
 sed -i '' -e "25a\\
 _dirs=\"/var/run/JDownloader /var/log/JDownloader\"" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
