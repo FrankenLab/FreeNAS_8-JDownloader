@@ -105,13 +105,13 @@ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 #if [ -f /var/run/JDownloader/JDownloader.pid ]; then
 #    if [ !$id ]; then
-#        (exit)
+#        exit
 #    fi    
 #    echo ${id}    
 #    if ps -p ${id} > /dev/null    
 #        then    
 #            echo "Another copy of JDownloader appears to be running already."    
-#            (exit)    
+#            exit 
 #        else
 #            rm /var/run/JDownloader/JDownloader.pid
 #    fi
