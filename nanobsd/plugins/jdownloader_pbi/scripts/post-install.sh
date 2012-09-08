@@ -107,10 +107,10 @@ echo "sleep 2" >> ${JDOWNLOADER_HOME}/sbin/jdownloader
 echo "pgrep -U jdown -f JDownloader.jar > /var/run/JDownloader/JDownloader.pid" >> ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 
-mkdir -p ${JDOWNLOADER_HOME}/etc/jdownloader/home
+mkdir -p ${JDOWNLOADER_HOME}/etc/home/jdownloader
 pw groupadd jdown
-pw useradd jdown -g jdown -G wheel -s /bin/sh -d ${JDOWNLOADER_HOME}/etc/jdownloader/home -w none
-chown -R jdown:jdown ${JDOWNLOADER_HOME}/etc/jdownloader
+pw useradd jdown -g jdown -G wheel -s /bin/sh -d ${JDOWNLOADER_HOME}/etc/home/jdownloader-w none
+chown -R jdown:jdown ${JDOWNLOADER_HOME}/etc/home/jdownloader
 
 mkdir -p ${JDOWNLOADER_HOME}/downloads
 chown jdown:jdown ${JDOWNLOADER_HOME}/downloads
