@@ -105,31 +105,31 @@ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 #sed -i '' -e "13a\\
 #ldconfig -m ${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "34a\\
+sed -i '' -e "32a\\
 if [ -z `pgrep Xvfb` ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "35a\\
+sed -i '' -e "33a\\
 \ \ \ \ exec /usr/pbi/jdownloader-amd64/bin/Xvfb :1 -screen 0 1024x768x16 &" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "36a\\
+sed -i '' -e "34a\\
 fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "37a\\
+sed -i '' -e "35a\\
 if [ -z `pgrep x11vnc` ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "38a\\
+sed -i '' -e "36a\\
 \ \ \ \ exec /usr/pbi/jdownloader-amd64/bin/x11vnc -noshm -nevershared -forever -display :1 &" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "39a\\
+sed -i '' -e "37a\\
 fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "40a\\
+sed -i '' -e "38a\\
 if [ -z `pgrep fluxbox` ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "40a\\
+sed -i '' -e "39a\\
 \ \ \ \ exec /usr/pbi/jdownloader-amd64/bin/fluxbox -d :1 &" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-sed -i '' -e "41a\\
+sed -i '' -e "40a\\
 fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 # Creat PID in sbin/jdownloader
