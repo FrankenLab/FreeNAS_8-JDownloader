@@ -27,6 +27,8 @@ rm -rf ${JDOWNLOADER_HOME}/fonts
 # Changed script user from www to jdown
 sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 
+sed -i '' -e "s,-U www,-U root,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+
 sed -i '' -e "25a\\
 _dirs=\"/var/run/JDownloader /var/log/JDownloader\"" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 
@@ -103,38 +105,37 @@ fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 #sed -i '' -e "13a\\
 #ldconfig -m ${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-#if [ -f /var/run/JDownloader/JDownloader.pid ]; then
-#    if [ !$id ]; then
-#        exit
-#    fi    
-#    echo ${id}    
-#    if ps -p ${id} > /dev/null    
-#        then    
-#            echo "Another copy of JDownloader appears to be running already."    
-#            exit 
-#        else
-#            rm /var/run/JDownloader/JDownloader.pid
-#    fi
-#fi
+sed -i '' -e "34a\\
+if [ -z `pgrep Xvfb` ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
-#if [ -z `pgrep Xvfb` ]; then
-#    exec /usr/pbi/jdownloader-amd64/bin/Xvfb :1 -screen 0 1024x768x16 &
-#    echo "Xvfb not running?"
-#fi
-#if [ -z `pgrep x11vnc` ]; then
-#    echo "x11vnc not running?"
-#    exec /usr/pbi/jdownloader-amd64/bin/x11vnc -noshm -nevershared -forever -display :1 &
-#fi
-#if [ -z `pgrep fluxbox` ]; then
-#    exec /usr/pbi/jdownloader-amd64/bin/fluxbox -d :1 &
-#    echo "fluxbox not running?"
-#fi
+sed -i '' -e "35a\\
+\ \ \ \ exec /usr/pbi/jdownloader-amd64/bin/Xvfb :1 -screen 0 1024x768x16 &" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "36a\\
+fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "37a\\
+if [ -z `pgrep x11vnc` ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "38a\\
+\ \ \ \ exec /usr/pbi/jdownloader-amd64/bin/x11vnc -noshm -nevershared -forever -display :1 &" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "39a\\
+fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "40a\\
+if [ -z `pgrep fluxbox` ]; then" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "40a\\
+\ \ \ \ exec /usr/pbi/jdownloader-amd64/bin/fluxbox -d :1 &" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+sed -i '' -e "41a\\
+fi" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 # Creat PID in sbin/jdownloader
 
 echo "sleep 2" >> ${JDOWNLOADER_HOME}/sbin/jdownloader
-echo "pgrep -U jdown -f JDownloader.jar > /var/run/JDownloader/JDownloader.pid" >> ${JDOWNLOADER_HOME}/sbin/jdownloader
-
+echo "pgrep -U root -f JDownloader.jar > /var/run/JDownloader/JDownloader.pid" >> ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 mkdir -p ${JDOWNLOADER_HOME}/etc/home/jdownloader
 pw groupadd jdown
