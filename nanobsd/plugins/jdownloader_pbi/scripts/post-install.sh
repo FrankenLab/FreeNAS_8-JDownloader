@@ -20,25 +20,42 @@ rm -rf ${JDOWNLOADER_HOME}/fonts
 # SED Stuff
 ##########################
 
-sed -i '' -e "s,exec java,exec ${JDOWNLOADER_HOME}/bin/java,g" ${JDOWNLOADER_HOME}/sbin/jdownloader
-
-# setenv FontPath "/usr/local/lib/X11/fonts/" (Add to sbin/jdownloader with sed)
-#sed -i '' -e "12a\\
-#setenv FontPath \"/usr/local/lib/X11/fonts/\"" ${JDOWNLOADER_HOME}/sbin/jdownloader
-
-sed -i '' -e "13a\\
-ldconfig -m ${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
-
-# Need to put/replace this in /usr/local/etc/rc.d/jdownloaderd
-sed -i '' -e "s,command=,command=env DISPLAY=:1 ," ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+#################################
+### rc.d/jdownloaderd changes ###
+#################################
 
 # Changed script user from www to jdown
 sed -i '' -e "s,www,jdown,g" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 
+sed -i '' -e "25a\\
+_dirs=\"/var/run/JDownloader /var/log/JDownloader\"" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+
+
+sed -i '' -e "26a\\
+start_precmd=\"mkdir -p \$_dirs; touch /var/run/JDownloader/JDownloader.pid; chown -R \$jdownloader_user \$_dirs; ldconfig -m /usr/pbi/jdownloader-amd64/lib\"" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+
+sed -i '' -e "27a\\
+RUN_AS_USER=\"jdown\"" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+
+# Need to put/replace this in /usr/local/etc/rc.d/jdownloaderd
+#command='/usr/pbi/jdownloader-amd64/sbin/jdownloader'
+#sed -i '' -e "s,command=,command=env DISPLAY=:1 ," ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
+
+
+################################
+### sbin/jdownloader changes ###
+################################
+
+sed -i '' -e "s,exec java,exec ${JDOWNLOADER_HOME}/bin/java,g" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+#sed -i '' -e "12a\\
+#setenv FontPath \"/usr/local/lib/X11/fonts/\"" ${JDOWNLOADER_HOME}/sbin/jdownloader
+
+
 # Need to test PIDfile because if user quits from X11 session FreeNAS GUI doesn't know
 # Test if PIDfile exists, add to sbin/jdownloader, need to see if FreeNAS GUI can be refreshed
 
-#sed -i '' -e "3a\\
+#sed -i '' -e "4a\\
 #^M" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 sed -i '' -e "5a\\
@@ -82,6 +99,9 @@ sed -i '' -e "17a\\
 
 sed -i '' -e "18a\\
 fi" ${JDOWNLOADER_HOME}/sbin/jdownloader 
+
+#sed -i '' -e "13a\\
+#ldconfig -m ${JDOWNLOADER_HOME}/lib" ${JDOWNLOADER_HOME}/sbin/jdownloader
 
 #if [ -f /var/run/JDownloader/JDownloader.pid ]; then
 #    if [ !$id ]; then
