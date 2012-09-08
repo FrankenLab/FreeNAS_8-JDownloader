@@ -12,9 +12,9 @@ class JDownloaderForm(forms.ModelForm):
 
     class Meta:
         model = models.JDownloader
-        #widgets = {
-        #    'admin_pw': forms.widgets.PasswordInput(),
-        #}
+        widgets = {
+            'servername': forms.widgets.TextInput(),
+        }
         exclude = (
             'enable',
             )
@@ -22,9 +22,6 @@ class JDownloaderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.jail = kwargs.pop('jail')
         super(JDownloaderForm, self).__init__(*args, **kwargs)
-
-        #if self.instance.admin_pw:
-        #    self.fields['admin_pw'].required = False
 
     def save(self, *args, **kwargs):
         obj = super(JDownloaderForm, self).save(*args, **kwargs)
@@ -40,3 +37,22 @@ class JDownloaderForm(forms.ModelForm):
             #f.write('jdownloader_flags="%s"\n' % (jdownloader_flags, ))
 
         os.system(os.path.join(utils.jdownloader_pbi_path, "tweak-rcconf"))
+
+
+        try:
+            os.makedirs("/var/cache/JDownloader")
+            os.chown("/var/cache/JDownloader", *pwd.getpwnam('jdown')[2:4])
+        except Exception:
+            pass
+
+        with open(utils.jdownloader_config, "w") as f:
+            f.write("[general]\n")
+            f.write("web_root = /usr/pbi/jdownloader-%s/etc/home/jdownloader\n" % (
+                platform.machine(),
+                ))
+            f.write("db_type = %s\n" % ("sqlite3", ))
+            f.write("db_params = %s\n" % ("/var/cache/JDownloader", ))
+            f.write("servername = %s\n" % (obj.servername, ))
+            f.write("runas = %s\n" % ("jdown", ))
+            f.write("Enable Xvfb Virtual X11 Display = %d\n" % (obj.always_scan, ))
+            f.write("\n[Must Be Enabled on first Run]\n")
