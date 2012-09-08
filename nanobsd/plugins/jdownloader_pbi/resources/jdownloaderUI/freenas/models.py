@@ -8,4 +8,4 @@ class JDownloader(models.Model):
 
     enable = models.BooleanField(default=False)
     servername = models.CharField(max_length=500, default=':1', blank=True)
-    always_scan = models.BooleanField(default=True)
+    xvfb_enable = models.BooleanField(default=True)

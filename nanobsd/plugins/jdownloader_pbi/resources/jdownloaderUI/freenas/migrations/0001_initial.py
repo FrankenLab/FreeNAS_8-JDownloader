@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('enable', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('servername', self.gf('django.db.models.fields.CharField')(default=':1', max_length=500, blank=False)),
-            ('always_scan', self.gf('django.db.models.fields.BooleanField')(default=True)),
+            ('xvfb_enable', self.gf('django.db.models.fields.BooleanField')(default=True)),
         ))
         db.send_create_signal('freenas', ['JDownloader'])
 
@@ -34,7 +34,7 @@ class Migration(SchemaMigration):
     models = {
         'freenas.jdownloader': {
             'Meta': {'object_name': 'JDownloader'},
-            'always_scan': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'xvfb_enable': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'enable': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'servername': ('django.db.models.fields.CharField', [], {'default': "':1'", 'max_length': '500', 'blank': 'True'})
