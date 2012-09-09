@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+# $FreeBSD$
+
+LOGFILE="/var/log/JDownloader/JDownloader.log"
+JD_HOME="/usr/pbi/jdownloader-`uname -m`"
+
+# Check if Xvfb is enabled in config file created by GUI
+XVFB_ENABLE=`grep Xvfb ${JD_HOME}/etc/jdownloader.conf | sed -e "s,Xvfb_Enable= ,,"`
+echo $XVFB_ENABLE
+
+# Get X DISPLAY setting from config file created by GUI
+XDISPLAY=`grep "X11_Display= " ${JD_HOME}/etc/jdownloader.conf | sed -e "s,X11_Display= ,,"`
+#echo $XDISPLAY
+DISPLAY=${XDISPLAY}
+echo $DISPLAY
+
+if [ ! -f /var/run/JDownloader/JDownloader.pid ]; then
+    echo "No PIDfile found"
+else
+    id=`cat /var/run/JDownloader/JDownloader.pid`
+    #echo ${id}
+    if [ ! -z ${id} ];then
+        echo ${id}
+        echo "Existing PIDfile =" ${id} >> $LOGFILE
+        if ! ps -p ${id} >> $LOGFILE;then
+            echo "Another copy of JDownloader might be running already." >> $LOGFILE
+            echo "Killing existing process if its running and restarting" >> $LOGFILE
+            kill -9 ${id}
+            rm -f /var/run/JDownloader/JDownloader.pid
+            echo "Deleted stale PIDfile"
+        fi
+    fi
+fi
+
+# EXAMPLE setting DISPLAY for bash and csh
+# export DISPLAY=:1
+# setenv DISPLAY :1
+# export DISPLAY=192.168.2.1:0.0
+# setenv DISPLAY 192.168.2.1:0.0
+#
+
+# EXAMPLE of VNC using password authentication
+# exec x11vnc -noshm -usepw -nevershared -forever -display :1
+
+if [ $XVFB_ENABLE -eq 1 ]; then
+
+    export DISPLAY=:1
+
+    if [ -z `pgrep Xvfb` ]; then
+        exec ${JD_HOME}/bin/Xvfb :1 -screen 0 1024x768x16 &
+    fi
+
+    if [ -z `pgrep x11vnc` ]; then
+        exec ${JD_HOME}/bin/x11vnc -noshm -nevershared -forever -display :1 &
+    fi
+
+    if [ -z `pgrep fluxbox` ]; then
+        sleep 1
+        export DISPLAY
+        exec ${JD_HOME}/bin/fluxbox -d :1 &
+    fi
+fi
+
+if [ $XVFB_ENABLE -ne 1 ]; then
+    killall Xvfb x11vnc fluxbox
+    export DISPLAY
+    echo "Starting JDownloader on DISPLAY:" >> $LOGFILE
+    echo $DISPLAY >> $LOGFILE
+fi
+
+exec ${JD_HOME}/bin/java -Xmx512m -jar ${JD_HOME}/share/java/JDownloader/JDownloader.jar > $LOGFILE 2>&1 &
+
+sleep 2
+pgrep -U root -f JDownloader.jar > /var/run/JDownloader/JDownloader.pid
