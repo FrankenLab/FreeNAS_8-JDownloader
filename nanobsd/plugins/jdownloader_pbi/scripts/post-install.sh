@@ -46,6 +46,10 @@ RUN_AS_USER=\"jdown\"" ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd
 # Copy template wrapper script over existing script
 cp -a ${JDOWNLOADER_HOME}/sbin_jdownloader ${JDOWNLOADER_HOME}/sbin/
 
+# Copy template RC script over existing script
+cp -a ${JDOWNLOADER_HOME}/rc_jdownloaderd ${JDOWNLOADER_HOME}/etc/rc.d/
+cp -a ${JDOWNLOADER_HOME}/rc_jdownloaderd /usr/local/etc/rc.d/
+
 mkdir -p ${JDOWNLOADER_HOME}/etc/home/jdownloader/.fluxbox
 pw groupadd jdown
 pw useradd jdown -g jdown -G wheel -s /bin/sh -d ${JDOWNLOADER_HOME}/etc/home/jdownloader -w none
