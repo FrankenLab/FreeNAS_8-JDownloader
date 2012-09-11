@@ -18,13 +18,13 @@ name="jdownloader"
 rcvar=${name}_enable
 
 pidfile=/var/run/JDownloader/JDownloader.pid
-command=/usr/pbi/jdownloader-amd64/sbin/jdownloader
+command=/usr/pbi/jdownloader-`uname -m`/sbin/jdownloader
 
 load_rc_config $name
 
 jdownloader_user=${jdownloader_user="root"}
 _dirs="/var/run/JDownloader /var/log/JDownloader"
-start_precmd="mkdir -p $_dirs; touch /var/run/JDownloader/JDownloader.pid; chown -R $jdownloader_user $_dirs; ldconfig -m /usr/pbi/jdownloader-amd64/lib"
+start_precmd="mkdir -p $_dirs; touch /var/run/JDownloader/JDownloader.pid; chown -R $jdownloader_user $_dirs; ldconfig -m /usr/pbi/jdownloader-`uname -m`/lib"
 #RUN_AS_USER="jdown"
 
 command_args="$jdownloader_args"
