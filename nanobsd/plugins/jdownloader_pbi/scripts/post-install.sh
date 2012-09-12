@@ -74,6 +74,7 @@ ln -sf ${JDOWNLOADER_HOME}/bin/unrar /usr/local/bin/unrar
 ln -sf ${JDOWNLOADER_HOME}/etc/rc.d/jdownloaderd /usr/local/etc/rc.d/jdownloaderd
 
 ldconfig -m ${JDOWNLOADER_HOME}/lib
+ldconfig -m /usr/pbi/jdownloader-`uname -m`/openjdk6/jre/lib/`uname -m`
 
 #ln -sf /usr/pbi/${JDOWNLOADER_HOME}/openjdk6/jre/lib/amd64/xawt/libmawt.so /usr/local/lib/
 #find /usr/pbi/${JDOWNLOADER_HOME}/lib -name "libXrender.*" -exec ln -sf {} /usr/local/lib/ \;
