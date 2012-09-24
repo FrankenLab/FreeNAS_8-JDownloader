@@ -93,7 +93,7 @@ rm -rf ${JDOWNLOADER_HOME}/usr
 
 #echo $JAIL_IP"	"`hostname` >> /etc/hosts
 
-echo 'jdownloader_flags=""' > ${JDOWNLOADER_HOME}/etc/rc.conf
-echo 'jdownloader_flags=""' > /etc/rc.conf
+echo 'jdownloader_flags=""' >> ${JDOWNLOADER_HOME}/etc/rc.conf
+echo 'jdownloader_flags=""' >> /etc/rc.conf
 
 ${JDOWNLOADER_HOME}/bin/python ${JDOWNLOADER_HOME}/jdownloaderUI/manage.py syncdb --migrate --noinput
