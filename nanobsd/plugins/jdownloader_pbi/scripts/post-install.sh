@@ -2,7 +2,7 @@
 
 JDOWNLOADER_HOME=/usr/pbi/jdownloader-`uname -m`
 
-${JDOWNLOADER_HOME}/bin/python ${JDOWNLOADER_HOME}/jdownloaderUI/manage.py syncdb --migrate --noinput
+env -i ${JDOWNLOADER_HOME}/bin/python ${JDOWNLOADER_HOME}/jdownloaderUI/manage.py syncdb --migrate --noinput
 
 echo libz.so.4 libz.so.5 > /etc/libmap.conf
 echo libz.so.4 libz.so.5 > ${JDOWNLOADER_HOME}/etc/libmap.conf
